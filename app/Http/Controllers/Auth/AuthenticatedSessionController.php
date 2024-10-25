@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Student;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,10 +31,10 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
+        $userType = $request->user()->user_type;
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route($userType === 'student' ? 'dashboard-student' : 'dashboard', absolute: false));
     }
 
     /**

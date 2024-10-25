@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Middleware\EnsureStudent;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('PPDB/Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -14,9 +17,16 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.welcome');
+Route::get('/ppdb/register', [PpdbController::class, 'register'])->name('ppdb.register');
+Route::post('/ppdb/store', [PpdbController::class, 'store'])->name('ppdb.store');
+Route::post('/ppdb/check', [PpdbController::class, 'check'])->name('ppdb.check');
+
+Route::middleware(EnsureStudent::class)->group(function () {
+    Route::get('/dashboard-student', [StudentController::class, 'index'])->name('dashboard-student');
+    Route::get('/dashboard-student/announcement', [StudentController::class, 'announcement'])->name('announcement');
+    Route::get('/dashboard-student/profile', [StudentController::class, 'profile'])->name('profile');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -24,4 +34,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
