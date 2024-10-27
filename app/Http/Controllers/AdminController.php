@@ -70,10 +70,9 @@ class AdminController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function studentList(Request $request)
+    public function studentList()
     {
-        $page = $request->query()['page'] ?? 1;
-        $student = Student::paginate(10);
+        $student = Student::with('student_registration')->paginate(10);
         return Inertia::render('StudentList', [
             'student' => $student
         ]);

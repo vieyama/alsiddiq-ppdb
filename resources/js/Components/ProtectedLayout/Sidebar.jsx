@@ -15,7 +15,7 @@ const ProtectedSidebar = (props) => {
     });
 
     return (
-        <div className={`bg-white fixed min-h-[calc(100vh-65px)] transition-all duration-300 hidden md:block ${minimizeSidebar ? 'w-18' : 'w-auto'}`}>
+        <div className={`bg-white fixed min-h-[calc(100vh-65px)] z-10 shadow-md transition-all duration-300 hidden md:block ${minimizeSidebar ? 'w-18' : 'w-auto'}`}>
             <SidebarItem {...props} handlePrint={handlePrint} />
 
             {auth?.user?.user_type === 'student' && <div className='hidden'>
