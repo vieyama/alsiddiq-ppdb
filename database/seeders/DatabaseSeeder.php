@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
+use App\Models\StudentParent;
+use App\Models\StudentPrevSchool;
+use App\Models\StudentRegistration;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,11 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory(20)->create();
+        // Student::factory()->count(20)->create();
+        // StudentRegistration::factory()->count(20)->create();
+        // StudentParent::factory()->count(40)->create();
+        StudentPrevSchool::factory()->count(20)->create();
     }
 }

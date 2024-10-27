@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react'
 
 const Toast = ({ message, setMessage, position = 'top', type = 'info' }) => {
-    console.log(type);
-
     useEffect(() => {
         if (message) {
             setTimeout(() => setMessage(null), 2000)

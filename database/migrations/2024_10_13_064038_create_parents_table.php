@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('income');
             $table->string('occupation');
             $table->string('phone');
-            $table->string('student_id');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

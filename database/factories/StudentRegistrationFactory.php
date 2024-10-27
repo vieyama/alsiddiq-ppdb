@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,12 @@ class StudentRegistrationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'student_id' => Student::factory(),
+            'register_number' => 'PSB' . fake()->randomNumber(8, true),
+            'status' =>
+            fake()->randomElement(['waiting-for-verification', 'verified', 'passed']),
+            'registration_year' => '2024',
+            'announcement_number' => null,
         ];
     }
 }

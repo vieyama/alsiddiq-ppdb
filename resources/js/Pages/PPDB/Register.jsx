@@ -1,6 +1,6 @@
 import React from 'react'
 import PpdbLayout from '@/Layouts/PpdbLayout'
-import { Head, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next';
 import { atomWithStorage } from 'jotai/utils'
 import First from './components/Form/Step/First';
@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 import Second from './components/Form/Step/Second';
 import Third from './components/Form/Step/Third';
 import Fourth from './components/Form/Step/Fourth';
+import Head from '@/Components/Head';
 
 const registerDataAtom = atomWithStorage('registerData', {
     studentData: null,

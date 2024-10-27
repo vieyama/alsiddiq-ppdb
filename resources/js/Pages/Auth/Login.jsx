@@ -4,7 +4,9 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
+import Head from '@/Components/Head';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, processing, errors } = useForm({
@@ -13,9 +15,10 @@ export default function Login({ status, canResetPassword }) {
         remember: false,
     });
 
+    const [error, setError] = useState('')
     const submit = (values) => {
         values.preventDefault();
-        router.post("login", data);
+        router.post("login", data, { onError: err => setError(err.email) });
     };
 
     return (
@@ -28,6 +31,10 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
+            {error && <div className={`alert rounded-md mb-4 mt-2 text-white alert-error`}>
+                <span>{error}</span>
+            </div>}
+
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -37,7 +44,7 @@ export default function Login({ status, canResetPassword }) {
                         type="string"
                         name="email"
                         value={data.email}
-                        className="block w-full mt-1"
+                        className="block w-full pl-3 mt-1 border"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}

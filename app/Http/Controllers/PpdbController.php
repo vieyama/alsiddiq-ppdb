@@ -82,7 +82,7 @@ class PpdbController extends Controller
                 'register_number' => $registrationNumber,
                 'student_id' => $student->id,
                 'status' => 'waiting-for-verification',
-                'registration_year' => date("YYYY")
+                'registration_year' => date("Y")
             ]);
 
             // Father Data

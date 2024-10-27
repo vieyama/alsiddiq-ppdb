@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_reports', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->string('subject');
             $table->bigInteger('grade_smt_1')->default(0);
             $table->bigInteger('grade_smt_2')->default(0);

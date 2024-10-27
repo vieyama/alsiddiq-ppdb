@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\StudentController;
@@ -32,6 +33,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/update-photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/student-list', [AdminController::class, 'studentList'])->name('student-list');
+    Route::get('/ppdb-setting', [AdminController::class, 'ppdbSetting'])->name('ppdb-setting');
+    Route::patch('/ppdb-setting/update/{id}', [AdminController::class, 'update'])->name('ppdb-setting-update');
+});
+
 
 require __DIR__ . '/auth.php';

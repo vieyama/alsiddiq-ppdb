@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowDownTrayIcon, DocumentTextIcon, HomeIcon, MegaphoneIcon, PrinterIcon } from '@heroicons/react/24/solid'
+import { ArrowDownTrayIcon, Cog6ToothIcon, DocumentArrowUpIcon, DocumentTextIcon, HomeIcon, MegaphoneIcon, PresentationChartLineIcon, PrinterIcon } from '@heroicons/react/24/solid'
 import { minimizeSidebarAtom } from '@/Layouts/AuthenticatedLayout'
 import { useAtom } from 'jotai'
 import { cn } from '@/utils/cn'
@@ -8,14 +8,14 @@ import { Link } from '@inertiajs/react'
 const SidebarItem = ({ className, ...props }) => {
     const [minimizeSidebar] = useAtom(minimizeSidebarAtom)
     const url = window.location
-    const { handlePrint, studentRegistration } = props
+    const { studentRegistration, handlePrint } = props
     const registrationStatus = studentRegistration?.status
-
+    const userType = props?.auth?.user?.user_type;
     const handleClickPrint = () => {
         return registrationStatus !== 'waiting-for-verification' && handlePrint()
     }
 
-    return (
+    return userType === 'student' ? (
         <ul className={cn(`${minimizeSidebar ? 'w-18' : 'w-64'} py-6 menu gap-1 transition-all duration-30`, className)}>
             <li className={`${minimizeSidebar ? 'w-fit' : 'w-auto'}`}>
                 <Link className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student' ? 'bg-base-200' : ''}`} href='/dashboard-student'>
@@ -42,13 +42,51 @@ const SidebarItem = ({ className, ...props }) => {
                 </div>
             </li>
             <li>
-                <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/FORMULIR-PENDAFTARAN.docx">
+                <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/Panduan_PPDB_Online.pdf" target='_blank'>
                     <ArrowDownTrayIcon className='size-5' />
                     {!minimizeSidebar && 'Download Panduan'}
                 </a>
             </li>
         </ul>
-    )
+    ) : <ul className={cn(`${minimizeSidebar ? 'w-18' : 'w-64'} py-6 menu gap-1 transition-all duration-30`, className)}>
+        <li className={`${minimizeSidebar ? 'w-fit' : 'w-auto'}`}>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/dashboard' ? 'bg-base-200' : ''}`} href='/dashboard'>
+                <HomeIcon className='size-5' />
+                {!minimizeSidebar && 'Dashboard'}
+            </Link>
+        </li>
+
+        <li>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/student-list' ? 'bg-base-200' : ''}`} href='/student-list'>
+                <DocumentTextIcon className='size-5' />
+                {!minimizeSidebar && 'Daftar Siswa'}
+            </Link>
+        </li>
+        <li>
+            <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/Panduan_PPDB_Online.pdf" target='_blank'>
+                <DocumentArrowUpIcon className='size-5' />
+                {!minimizeSidebar && 'Export Formulir'}
+            </a>
+        </li>
+        <li>
+            <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/Panduan_PPDB_Online.pdf" target='_blank'>
+                <DocumentArrowUpIcon className='size-5' />
+                {!minimizeSidebar && 'Export Data LMS'}
+            </a>
+        </li>
+        <li>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/profile' ? 'bg-base-200' : ''}`} href='/dashboard-student/profile'>
+                <PresentationChartLineIcon className='size-5' />
+                {!minimizeSidebar && 'Statistik Pendaftar'}
+            </Link>
+        </li>
+        <li>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/ppdb-setting' ? 'bg-base-200' : ''}`} href='/ppdb-setting'>
+                <Cog6ToothIcon className='size-5' />
+                {!minimizeSidebar && 'Pengaturan PPDB'}
+            </Link>
+        </li>
+    </ul>
 }
 
 export default SidebarItem

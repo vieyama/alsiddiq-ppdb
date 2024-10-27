@@ -46,7 +46,7 @@ const GradesTableProfile = ({ report, grades }) => {
                     </tbody>
                 </table>
             </div>
-            <div className="flex justify-between w-full gap-4">
+            <div className="flex flex-col justify-between w-full gap-4 md:flex-row">
                 <div className="w-full p-2 overflow-x-auto shadow-md">
                     <span className="ml-4 font-bold">Nilai USBN</span>
                     <table className="table border">

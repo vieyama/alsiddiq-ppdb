@@ -22,3 +22,11 @@
 .swap input {
     display: none;
 }
+
+canvas {
+    width: 100% !important;
+}
+
+[type='checkbox']:focus, [type='radio']:focus{
+    background: transparent;
+}

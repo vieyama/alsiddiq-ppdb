@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('subject');
             $table->bigInteger('grade')->defaul(0);
             $table->enum('type', ['usbn', 'unbk']);
-            $table->string('student_id');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

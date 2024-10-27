@@ -34,14 +34,14 @@ const ProtectedNavbar = ({ user }) => {
                             <div className="w-10 rounded-full">
                                 <img
                                     alt="Tailwind CSS Navbar component"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                    src={user?.photo ? `/uploads/${user.photo}` : "/user.png"} />
                             </div>
                         </div>
                     </div>
                     <ul
                         tabIndex={0}
                         className="z-10 p-2 mt-3 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                        <li><Link className='py-2' href="#">Profile</Link></li>
+                        <li><Link className='py-2' href="/profile">Profile</Link></li>
                         <li><Link className='py-2' href={route('logout')} method="post" as="button">Logout</Link></li>
                     </ul>
                 </div>

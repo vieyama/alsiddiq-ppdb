@@ -1,11 +1,12 @@
 import PpdbLayout from '@/Layouts/PpdbLayout'
 import { rupiahFormatter } from '@/utils/rupiahFormatter';
-import { Head, usePage } from '@inertiajs/react'
+import { usePage } from '@inertiajs/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import LoginModal from './components/LoginModal';
 import { UsersIcon, DocumentTextIcon, ArrowDownTrayIcon, PhoneIcon, EnvelopeIcon, GlobeAltIcon } from '@heroicons/react/24/outline'
 import TocModal from './components/TocModal';
+import Head from '@/Components/Head';
 
 const Welcome = () => {
     const { t } = useTranslation();

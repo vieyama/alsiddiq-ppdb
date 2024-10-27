@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('student_registrations', function (Blueprint $table) {
             $table->id();
             $table->string('register_number')->uniqid();
-            $table->string('student_id');
             $table->string('status');
             $table->string('registration_year');
             $table->string('announcement_number')->nullable();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

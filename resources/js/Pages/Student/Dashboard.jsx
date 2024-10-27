@@ -1,12 +1,15 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { ArrowDownOnSquareIcon, DocumentTextIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
-import { Head, Link, usePage } from '@inertiajs/react';
+import {  Link, usePage } from '@inertiajs/react';
 import { AnnouncementComponent } from './Component/AnnouncementComponent';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { Print } from './Component/Print';
+import { ProofofRegistrationPrint } from './Component/Print/ProofofRegistrationPrint';
 import { useTranslation } from 'react-i18next';
+import { ProofofVerificationPrint } from './Component/Print/ProofofVerificationPrint';
+import Head from '@/Components/Head';
+import { ProofofPassedPrint } from './Component/Print/ProofofPassedPrint';
 
 export default function Dashboard() {
     const user = usePage().props.auth.user;
@@ -14,22 +17,36 @@ export default function Dashboard() {
     const studentRegistration = usePage().props?.studentRegistration;
     const school = usePage().props?.school;
     const parents = usePage().props?.parent;
-    const { t } = useTranslation()
 
     const contentRef = useRef();
     const handlePrint = useReactToPrint({
         contentRef
     });
 
+    const registrationRef = useRef();
+    const handlePrintRegistration = useReactToPrint({
+        contentRef: registrationRef
+    });
+
+    const passedRef = useRef();
+    const handlePrintPassed = useReactToPrint({
+        contentRef: passedRef
+    });
+
+    const onClickPrint = (type) => {
+        if(type === 'verified'){
+            handlePrintRegistration()
+        }
+        if(type === 'passed'){
+            handlePrintPassed()
+        }
+    }
+
     const printLabel = studentRegistration.status === "waiting-for-verification" ? 'Cetak Bukti Pendaftaran, setelah Admin Sekolah melakukan Verifikasi Biaya Pendaftaran' : 'Cetak Bukti Pendaftaran'
 
     return (
-        <AuthenticatedLayout handlePrint={handlePrint}>
-            <Head>
-                <title>Dashboard</title>
-                <meta head-key="description" name="description" content="AL SIDDIQ INTERNATIONAL SCHOOL PPDB" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-            </Head>
+        <AuthenticatedLayout>
+            <Head title="Dashboard" />
 
             <div role="alert" className="p-4 text-center bg-primary">
                 <span className='text-lg font-normal text-white'>Selamat Datang Calon Siswa, {user.name}</span>
@@ -40,11 +57,11 @@ export default function Dashboard() {
                     <DocumentTextIcon className='text-white size-16' />
                     <span className='text-sm'>Biodata Pendaftaran</span>
                 </Link>
-                <div onClick={() => studentRegistration.status !== 'waiting-for-verification' && handlePrint()} className='flex flex-col items-center justify-between w-full gap-3 p-2 text-center text-white bg-secondaryGreen'>
+                <div onClick={() => studentRegistration.status !== 'waiting-for-verification' && handlePrint()} className='flex flex-col items-center justify-between w-full gap-3 p-2 text-center text-white cursor-pointer bg-secondaryGreen'>
                     <PrinterIcon className='text-white size-16' />
                     <span className='text-sm leading-4'>{printLabel}</span>
                 </div>
-                <a href="/FORMULIR-PENDAFTARAN.docx" className='flex flex-col items-center justify-between w-full gap-3 p-2 text-center text-white bg-secondaryGreen xl:w-96'>
+                <a href="/Panduan_PPDB_Online.pdf" target='_blank' className='flex flex-col items-center justify-between w-full gap-3 p-2 text-center text-white bg-secondaryGreen xl:w-96'>
                     <ArrowDownOnSquareIcon className='text-white size-16' />
                     <span className='text-sm'>Download Panduan</span>
                 </a>
@@ -55,12 +72,14 @@ export default function Dashboard() {
                         <MegaphoneIcon className='size-5' />
                         Pengumuman
                     </h2>
-                    <AnnouncementComponent studentRegistration={studentRegistration} user={user} />
+                    <AnnouncementComponent studentRegistration={studentRegistration} user={user} onClickPrint={onClickPrint} />
                 </div>
             </div>
 
             <div className='hidden'>
-                <Print ref={contentRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} t={t} />
+                <ProofofRegistrationPrint ref={contentRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
+                <ProofofVerificationPrint ref={registrationRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
+                <ProofofPassedPrint ref={passedRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
             </div>
         </AuthenticatedLayout>
     );

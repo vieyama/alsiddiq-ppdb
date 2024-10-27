@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('pob');
             $table->string('religion');
-            $table->foreignId('user_id')->index();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

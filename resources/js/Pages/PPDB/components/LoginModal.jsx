@@ -19,7 +19,6 @@ const LoginModal = ({ isOpen, onClose }) => {
         values.preventDefault();
         post("login", data);
     }
-    console.log(errors);
 
     return (
         <Modal maxWidth='xl' show={isOpen} onClose={onClose} className="modal">

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -59,5 +63,25 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        Validator::make($request->all(), [
+            'file' => ['required'],
+        ])->validate();
+        $userId = $request->user_id;
+        $users = User::findOrFail((int)$userId);
+        $currentPhoto = $users->photo;
+
+        if (!empty($currentPhoto)) {
+            unlink(public_path('uploads/') . $currentPhoto);
+        }
+
+        $fileName = $userId . time() . '.' . $request->file->extension();
+        $users->photo = $fileName;
+        $request->file->move(public_path('uploads'), $fileName);
+        $users->save();
+        return redirect()->back()->with('success', 'Photo profile updated.');
     }
 }

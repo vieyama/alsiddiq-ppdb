@@ -91,7 +91,11 @@ class StudentController extends Controller
 
         return Inertia::render('Student/Announcement', [
             'student' => $studentData['student'],
-            'studentRegistration' => $studentData['studentRegistration']
+            'studentRegistration' => $studentData['studentRegistration'],
+            'parent' => $studentData['parent'],
+            'school' => $studentData['school'],
+            'grades' => $studentData['grades'],
+            'report' => $studentData['report'],
         ]);
     }
 

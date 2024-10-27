@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('school_npsn')->uniqid();
             $table->string('school_status');
             $table->string('year_of_graduation');
-            $table->string('student_id');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('registration_year');
             $table->string('status');
+            $table->string('verification_notes');
             $table->string('chairman');
             $table->timestamps();
         });
