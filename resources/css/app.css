@@ -30,3 +30,11 @@ canvas {
 [type='checkbox']:focus, [type='radio']:focus{
     background: transparent;
 }
+
+.rdt_Pagination svg{
+    display: none !important;
+}
+
+.rdt_Pagination button svg{
+    display: inline !important;
+}

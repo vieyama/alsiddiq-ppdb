@@ -72,7 +72,7 @@ class AdminController extends Controller
      */
     public function studentList()
     {
-        $student = Student::with('student_registration')->paginate(10);
+        $student = Student::with('student_registration')->get();
         return Inertia::render('StudentList', [
             'student' => $student
         ]);
