@@ -57,9 +57,9 @@ const SidebarItem = ({ className, ...props }) => {
         </li>
 
         <li>
-            <Link className={`flex items-center py-3 text-base ${url.pathname === '/student-list' ? 'bg-base-200' : ''}`} href='/student-list'>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/verification-student' ? 'bg-base-200' : ''}`} href='/verification-student'>
                 <DocumentTextIcon className='size-5' />
-                {!minimizeSidebar && 'Daftar Siswa'}
+                {!minimizeSidebar && 'Verifikasi'}
             </Link>
         </li>
         <li>

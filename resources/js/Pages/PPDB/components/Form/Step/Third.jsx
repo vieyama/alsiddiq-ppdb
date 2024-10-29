@@ -11,7 +11,7 @@ const Third = ({ handleNext, previousSchoolData }) => {
     const step = urlParams.get('step') ?? 1
 
     const { t } = useTranslation();
-    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 
     useEffect(() => {
         if (previousSchoolData) {
@@ -109,7 +109,6 @@ const Third = ({ handleNext, previousSchoolData }) => {
                         {yearsOptions().map((item, key) => (
                             <option key={key} value={item}>{item}</option>
                         ))}
-
                     </select>
                     {errors?.yearOfGraduation?.type === "required" && <div className="label">
                         <span className="text-red-500 label-text-alt">{t('required')}</span>

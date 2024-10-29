@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::get('/student-list', [AdminController::class, 'studentList'])->name('student-list');
+    Route::get('/verification-student', [AdminController::class, 'verificationStudent'])->name('verification-student');
     Route::get('/ppdb-setting', [AdminController::class, 'ppdbSetting'])->name('ppdb-setting');
     Route::patch('/ppdb-setting/update/{id}', [AdminController::class, 'update'])->name('ppdb-setting-update');
 });

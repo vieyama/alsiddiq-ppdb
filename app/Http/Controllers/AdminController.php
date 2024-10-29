@@ -70,11 +70,27 @@ class AdminController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function studentList()
+    public function verificationStudent(Request $request)
     {
-        $student = Student::with('student_registration')->get();
-        return Inertia::render('StudentList', [
-            'student' => $student
+        $search = $request->query('search');
+        $students = Student::whereHas('student_registration', function ($query) {
+            $query->whereIn('status', ['verified', 'waiting-for-verification']);
+        })
+            ->where(function ($query) use ($search) {
+                $query->where('fullname', 'like', '%' . $search . '%')
+                    ->orWhere('nis', 'like', '%' . $search . '%')
+                    ->orWhere('nisn', 'like', '%' . $search . '%')
+                    ->orWhere('nik', 'like', '%' . $search . '%')
+                    ->orWhereHas('student_registration', function ($query) use ($search) {
+                        $query->where('register_number', 'like', '%' . $search . '%')
+                            ->whereIn('status', ['verified', 'waiting-for-verification']);
+                    });
+            })
+            ->with('student_registration')
+            ->get();
+
+        return Inertia::render('VerificationStudent', [
+            'students' => $students
         ]);
     }
 

@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
+import TextInput from '@/Components/TextInput';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -77,7 +78,7 @@ export default function Dashboard() {
                     <div className="stat-desc">Calon Siswa yang Lulus PPDB Tahun 2024</div>
                 </div>
             </div>
-
+<TextInput type="text" />
             <div className='mt-6'>
                 <div role="alert" className="alert">
                     <DocumentChartBarIcon className='size-6' />
@@ -89,7 +90,7 @@ export default function Dashboard() {
             </div>
 
             <div className='p-4 mt-6 shadow-lg'>
-                <Line data={data} options={options} />
+                <Line data={data} options={options} className='h-60' height={85} />
             </div>
         </AuthenticatedLayout>
     );
