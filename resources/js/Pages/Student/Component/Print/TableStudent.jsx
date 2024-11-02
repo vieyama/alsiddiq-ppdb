@@ -11,12 +11,12 @@ const TableStudent = ({ parents, studentRegistration, student, school }) => {
               <tr>
                   <td width={200}>NO. PENDAFTARAN</td>
                   <td width={1}>:</td>
-                  <td>{studentRegistration.register_number}</td>
+                  <td>{studentRegistration?.register_number}</td>
               </tr>
               <tr>
                   <td>TANGGAL PENDAFTARAN </td>
                   <td>:</td>
-                  <td>{dayjs(student.created_at).format('DD MMMM YYYY')}</td>
+                  <td>{dayjs(student?.created_at).format('DD MMMM YYYY')}</td>
               </tr>
               <tr>
                   <td>TANGGAL CETAK </td>
@@ -26,37 +26,37 @@ const TableStudent = ({ parents, studentRegistration, student, school }) => {
               <tr>
                   <td>NIS</td>
                   <td>:</td>
-                  <td>{student.nis}</td>
+                  <td>{student?.nis}</td>
               </tr>
               <tr>
                   <td>NISN</td>
                   <td>:</td>
-                  <td>{student.nisn}</td>
+                  <td>{student?.nisn}</td>
               </tr>
               <tr>
                   <td>NIK</td>
                   <td>:</td>
-                  <td>{student.nik}</td>
+                  <td>{student?.nik}</td>
               </tr>
               <tr>
                   <td>NAMA LENGKAP</td>
                   <td>:</td>
-                  <td>{student.fullname}</td>
+                  <td>{student?.fullname}</td>
               </tr>
               <tr>
                   <td>JENIS KELAMIN</td>
                   <td>:</td>
-                  <td>{student.gender === 'male' ? 'Laki-Laki' : 'Perempuan'}</td>
+                  <td>{student?.gender === 'male' ? 'Laki-Laki' : 'Perempuan'}</td>
               </tr>
               <tr>
                   <td>TEMPAT, TANGGAL LAHIR</td>
                   <td>:</td>
-                  <td>{student.pob}, {dayjs(student.dob).format('DD MMMM YYYY')}</td>
+                  <td>{student?.pob}, {dayjs(student?.dob).format('DD MMMM YYYY')}</td>
               </tr>
               <tr>
                   <td>AGAMA</td>
                   <td>:</td>
-                  <td className='capitalize'>{student.religion}</td>
+                  <td className='capitalize'>{student?.religion}</td>
               </tr>
               <tr>
                   <td>NAMA ORANG TUA /WALI</td>
@@ -73,12 +73,12 @@ const TableStudent = ({ parents, studentRegistration, student, school }) => {
               <tr>
                   <td>NO. HANDPHONE (HP)</td>
                   <td>:</td>
-                  <td>{student.phone}</td>
+                  <td>{student?.phone}</td>
               </tr>
               <tr>
                   <td>ASAL SEKOLAH</td>
                   <td>:</td>
-                  <td>{school.school_name}</td>
+                  <td>{school?.school_name}</td>
               </tr>
           </tbody>
       </table>

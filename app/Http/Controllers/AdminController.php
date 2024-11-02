@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentExport;
+use App\Exports\StudentExportLms;
 use App\Models\PpdbSetting;
 use App\Models\Student;
+use App\Models\StudentGrades;
+use App\Models\StudentParent;
+use App\Models\StudentPrevSchool;
 use App\Models\StudentRegistration;
-use Carbon\Carbon;
+use App\Models\StudentReport;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -43,10 +48,9 @@ class AdminController extends Controller
             return ['month' => $month, 'total' => 0];
         }, $months);
 
-        $currentYear = Carbon::now()->year;
 
         $data = StudentRegistration::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->where('registration_year', $currentYear)
+            ->where('registration_year', $year)
             ->groupByRaw('MONTH(created_at)')
             ->pluck('total', 'month');
 
@@ -57,7 +61,7 @@ class AdminController extends Controller
             }
         }
 
-        $ppdbSetting = PpdbSetting::findOrFail(1);
+        $ppdbSetting = PpdbSetting::find(1);
 
         return Inertia::render('Dashboard', [
             'totalUserThisYear' => $totalUserThisYear,
@@ -66,15 +70,118 @@ class AdminController extends Controller
             'ppdbSetting' => $ppdbSetting
         ]);
     }
+    public function statistic(Request $request)
+    {
+        $year = $request->query('year') ?? date('Y');
+        $totalUserPerYear = DB::table('student_registrations')->where('registration_year', $year)->count();
+        $totalUserPerYearPassed = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'passed')->count();
+        $totalUserPerYearVerified = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'verified')->count();
+        $totalUserPerYearNotPassed = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'not_passed')->count();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function verificationStudent(Request $request)
+        $months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        $monthlyTotalData = array_map(function ($month) {
+            return ['month' => $month, 'total' => 0];
+        }, $months);
+
+        $monthlyVerifiedData = array_map(function ($month) {
+            return ['month' => $month, 'total' => 0];
+        }, $months);
+
+        $monthlyPassedData = array_map(function ($month) {
+            return ['month' => $month, 'total' => 0];
+        }, $months);
+
+        $monthlyNotPassedData = array_map(function ($month) {
+            return ['month' => $month, 'total' => 0];
+        }, $months);
+
+
+        $dataTotal = StudentRegistration::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('registration_year', $year)
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('total', 'month');
+
+        $dataVerified = StudentRegistration::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('registration_year', $year)
+            ->where('status', 'verified')
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('total', 'month');
+
+        $dataPassed = StudentRegistration::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('registration_year', $year)
+            ->where('status', 'passed')
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('total', 'month');
+
+        $dataNotPassed = StudentRegistration::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->where('registration_year', $year)
+            ->where('status', 'not_passed')
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('total', 'month');
+
+        foreach ($monthlyTotalData as $index => &$monthData) {
+            $monthNumber = $index + 1;
+            if (isset($dataTotal[$monthNumber])) {
+                $monthData['total'] = $dataTotal[$monthNumber];
+            }
+        }
+
+        foreach ($monthlyVerifiedData as $index => &$monthData) {
+            $monthNumber = $index + 1;
+            if (isset($dataVerified[$monthNumber])) {
+                $monthData['total'] = $dataVerified[$monthNumber];
+            }
+        }
+
+        foreach ($monthlyPassedData as $index => &$monthData) {
+            $monthNumber = $index + 1;
+            if (isset($dataPassed[$monthNumber])) {
+                $monthData['total'] = $dataPassed[$monthNumber];
+            }
+        }
+
+        foreach ($monthlyNotPassedData as $index => &$monthData) {
+            $monthNumber = $index + 1;
+            if (isset($dataNotPassed[$monthNumber])) {
+                $monthData['total'] = $dataNotPassed[$monthNumber];
+            }
+        }
+
+        $ppdbSetting = PpdbSetting::find(1);
+
+        return Inertia::render('Statistic', [
+            'totalUserPerYear' => $totalUserPerYear,
+            'totalUserPerYearPassed' => $totalUserPerYearPassed,
+            'totalUserPerYearVerified' => $totalUserPerYearVerified,
+            'totalUserPerYearNotPassed' => $totalUserPerYearNotPassed,
+            'monthlyTotalData' => $monthlyTotalData,
+            'monthlyVerifiedData' => $monthlyVerifiedData,
+            'monthlyPassedData' => $monthlyPassedData,
+            'monthlyNotPassedData' => $monthlyNotPassedData,
+            'ppdbSetting' => $ppdbSetting
+        ]);
+    }
+
+    public function announcementStudent(Request $request)
     {
         $search = $request->query('search');
-        $students = Student::whereHas('student_registration', function ($query) {
-            $query->whereIn('status', ['verified', 'waiting-for-verification']);
+        $year = $request->query('year') ?? date('Y');
+        $students = Student::whereHas('student_registration', function ($query) use ($year) {
+            $query->whereIn('status', ['verified', 'passed', 'not_passed'])->where('registration_year', $year);
         })
             ->where(function ($query) use ($search) {
                 $query->where('fullname', 'like', '%' . $search . '%')
@@ -86,11 +193,100 @@ class AdminController extends Controller
                             ->whereIn('status', ['verified', 'waiting-for-verification']);
                     });
             })
-            ->with('student_registration')
+            ->with('student_registration')->orderBy('created_at', 'desc')
             ->get();
 
+        $ppdbSetting = PpdbSetting::find(1);
+        return Inertia::render('AnnouncementStudent', [
+            'students' => $students,
+            'ppdbSetting' => $ppdbSetting
+        ]);
+    }
+
+    static function getStudentData(Int $id)
+    {
+        $student = Student::where('id', $id)->first();
+        $studentRegistration = $student->student_registration;
+
+        $parents = StudentParent::where('student_id', $student->id)->get();
+        $school =
+            StudentPrevSchool::where('student_id', $student->id)->first();
+        $grades = StudentGrades::where('student_id', $student->id)->get();
+        $report = StudentReport::where('student_id', $student->id)->get();
+
+        $report->transform(function ($grade) {
+            // Calculate the average of grade_smt_1 to grade_smt_5
+            $average = (
+                $grade->grade_smt_1 +
+                $grade->grade_smt_2 +
+                $grade->grade_smt_3 +
+                $grade->grade_smt_4 +
+                $grade->grade_smt_5
+            ) / 5;
+
+            // Add the average to the current grade item
+            $grade->average = $average;
+
+            return $grade;
+        });
+
+        $parentsCollection = collect($parents);
+
+        // Check if any of the array items has the 'type' key set to 'guardian'
+        $hasGuardian = $parentsCollection->contains(function ($parent) {
+            return $parent['type'] === 'guardian';
+        });
+
+        // If no guardian is found, add dummy data
+        if (!$hasGuardian) {
+            $parentsCollection->push([
+                'student_id' => $student->id,
+                'type' => 'guardian',
+                'fullname' => '-',
+                'education' => '-',
+                'occupation' => '-',
+                'income' => '-',
+                'phone' => '-',
+            ]);
+        }
+
+        // Return the updated array
+        $parentsCollection->toArray();
+
+        return response()->json([
+            'student' => $student,
+            'studentRegistration' => $studentRegistration,
+            'school' => $school,
+            'parents' => $parentsCollection,
+            'grades' => $grades,
+            'report' => $report
+        ]);
+    }
+
+    public function verificationStudent(Request $request)
+    {
+        $search = $request->query('search');
+        $year = $request->query('year') ?? date('Y');
+        $students = Student::whereHas('student_registration', function ($query) use ($year) {
+            $query->whereIn('status', ['verified', 'waiting-for-verification'])->where('registration_year', $year);
+        })
+            ->where(function ($query) use ($search) {
+                $query->where('fullname', 'like', '%' . $search . '%')
+                    ->orWhere('nis', 'like', '%' . $search . '%')
+                    ->orWhere('nisn', 'like', '%' . $search . '%')
+                    ->orWhere('nik', 'like', '%' . $search . '%')
+                    ->orWhereHas('student_registration', function ($query) use ($search) {
+                        $query->where('register_number', 'like', '%' . $search . '%')
+                            ->whereIn('status', ['verified', 'waiting-for-verification']);
+                    });
+            })
+            ->with('student_registration')->orderBy('created_at', 'desc')
+            ->get();
+
+        $ppdbSetting = PpdbSetting::find(1);
         return Inertia::render('VerificationStudent', [
-            'students' => $students
+            'students' => $students,
+            'ppdbSetting' => $ppdbSetting
         ]);
     }
 
@@ -102,36 +298,28 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function updateVerification(Request $request): RedirectResponse
     {
-        //
+        $studentRegistration = StudentRegistration::find((int)$request->id);
+        $studentRegistration->status = $request->status;
+        $studentRegistration->save();
+
+        return redirect()->back()->with([
+            'success' => 'Data updated.'
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function batchUpdateVerification(Request $request): RedirectResponse
     {
-        //
+        StudentRegistration::whereIn('id', $request->ids)->update(['status' => $request->status]);
+        return redirect()->back()->with([
+            'success' => 'Data updated.'
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function updatePpdbSetting(Request $request, string $id): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id): RedirectResponse
-    {
-        $ppdbSetting = PpdbSetting::findOrFail((int)$id);
+        $ppdbSetting = PpdbSetting::find((int)$id);
 
         if (empty($ppdbSetting)) {
             return redirect()->back()->withErrors(['error' => 'Data tidak ditemukan.']);
@@ -140,6 +328,7 @@ class AdminController extends Controller
         $ppdbSetting->status = $request->status ?? $ppdbSetting->status;
         $ppdbSetting->chairman = $request->chairman ?? $ppdbSetting->chairman;
         $ppdbSetting->registration_year = $request->registration_year ?? $ppdbSetting->registration_year;
+        $ppdbSetting->verification_notes = $request->verification_notes ?? $ppdbSetting->verification_notes;
 
         $ppdbSetting->save();
         return redirect()->back()->with([
@@ -148,11 +337,32 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function updateSignature(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'file' => ['required'],
+        ])->validate();
+        $ppdbSetting = PpdbSetting::find(1);
+        $currentPhoto = $ppdbSetting->signature;
+
+        if (!empty($currentPhoto)) {
+            unlink(public_path('uploads/') . $currentPhoto);
+        }
+
+        $fileName = $ppdbSetting->chairman . time() . '.' . $request->file->extension();
+        $ppdbSetting->signature = $fileName;
+        $request->file->move(public_path('uploads'), $fileName);
+        $ppdbSetting->save();
+        return redirect()->back()->with('success', 'Signature updated.');
+    }
+
+    public function exportStudent()
+    {
+        return Excel::download(new StudentExport, 'Data Pendaftar.xlsx');
+    }
+
+    public function exportStudentLMS()
+    {
+        return Excel::download(new StudentExportLms, 'Data LMS.xlsx');
     }
 }

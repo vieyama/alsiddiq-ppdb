@@ -25,9 +25,9 @@ export default function Dashboard() {
     const ppdbSetting = usePage().props?.ppdbSetting;
 
     const switchRegistrationStatus = () => {
-        router.patch(`/ppdb-setting/update/${ppdbSetting.id}`, {
-            status: ppdbSetting.status === 'active' ? 'close' : 'active',
-            ...(ppdbSetting.status === 'close' && { registration_year: Number(ppdbSetting.registration_year) + 1 })
+        router.patch(`/ppdb-setting/update/${ppdbSetting?.id}`, {
+            status: ppdbSetting?.status === 'active' ? 'close' : 'active',
+            ...(ppdbSetting?.status === 'close' && { registration_year: Number(ppdbSetting?.registration_year) + 1 })
         })
     }
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
             },
             title: {
                 display: true,
-                text: 'Grafik Statistik Pendaftaran Siswa Tahun 2024 / 2025',
+                text: `Grafik Statistik Pendaftaran Siswa Tahun ${ppdbSetting?.registration_year} / ${Number(ppdbSetting?.registration_year) + 1}`,
             },
         },
     };
@@ -78,13 +78,13 @@ export default function Dashboard() {
                     <div className="stat-desc">Calon Siswa yang Lulus PPDB Tahun 2024</div>
                 </div>
             </div>
-<TextInput type="text" />
+            <TextInput type="text" />
             <div className='mt-6'>
                 <div role="alert" className="alert">
                     <DocumentChartBarIcon className='size-6' />
-                    <span>Status Pendaftaran PPDB Online <b className={`p-1 text-white ${ppdbSetting.status === 'active' ? 'bg-primary' : 'bg-orange-300'}`}>{ppdbSetting.status === 'active' ? 'masih dibuka' : 'telah ditutup'}.</b> Terakhir diubah {dayjs(ppdbSetting?.updated_at).format('DD-MM-YYYY H:m:ss')}.</span>
+                    <span>Status Pendaftaran PPDB Online <b className={`p-1 text-white ${ppdbSetting?.status === 'active' ? 'bg-primary' : 'bg-orange-300'}`}>{ppdbSetting?.status === 'active' ? 'masih dibuka' : 'telah ditutup'}.</b> Terakhir diubah {dayjs(ppdbSetting?.updated_at).format('DD-MM-YYYY H:m:ss')}.</span>
                     <div>
-                        <button onClick={switchRegistrationStatus} className="btn btn-sm btn-primary">{ppdbSetting.status === 'active' ? 'Tutup' : 'Buka'} Pendaftaran</button>
+                        <button onClick={switchRegistrationStatus} className="btn btn-sm btn-primary">{ppdbSetting?.status === 'active' ? 'Tutup' : 'Buka'} Pendaftaran</button>
                     </div>
                 </div>
             </div>

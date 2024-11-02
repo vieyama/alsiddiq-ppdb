@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '@inertiajs/react';
 import { Bars3Icon } from '@heroicons/react/24/solid';
 import { atom, useAtom } from 'jotai';
-import { minimizeSidebarAtom } from '@/Layouts/AuthenticatedLayout';
 import SidebarItem from './SidebarItem';
+import { minimizeSidebarAtom } from '@/atom/sidebar';
 
 const ProtectedNavbar = ({ user }) => {
     const [minimizeSidebar, setMinimize] = useAtom(minimizeSidebarAtom)

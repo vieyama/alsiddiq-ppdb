@@ -1,9 +1,9 @@
 import React from 'react'
 import { ArrowDownTrayIcon, Cog6ToothIcon, DocumentArrowUpIcon, DocumentTextIcon, HomeIcon, MegaphoneIcon, PresentationChartLineIcon, PrinterIcon } from '@heroicons/react/24/solid'
-import { minimizeSidebarAtom } from '@/Layouts/AuthenticatedLayout'
 import { useAtom } from 'jotai'
 import { cn } from '@/utils/cn'
 import { Link } from '@inertiajs/react'
+import { minimizeSidebarAtom } from '@/atom/sidebar'
 
 const SidebarItem = ({ className, ...props }) => {
     const [minimizeSidebar] = useAtom(minimizeSidebarAtom)
@@ -63,19 +63,25 @@ const SidebarItem = ({ className, ...props }) => {
             </Link>
         </li>
         <li>
-            <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/Panduan_PPDB_Online.pdf" target='_blank'>
+            <a className={`flex items-center py-3 text-base ${url.pathname === '/export-student' ? 'bg-base-200' : ''}`} href="/export-student">
                 <DocumentArrowUpIcon className='size-5' />
                 {!minimizeSidebar && 'Export Formulir'}
             </a>
         </li>
         <li>
-            <a className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/download' ? 'bg-base-200' : ''}`} href="/Panduan_PPDB_Online.pdf" target='_blank'>
+            <a className={`flex items-center py-3 text-base ${url.pathname === '/export-student-lms' ? 'bg-base-200' : ''}`} href="/export-student-lms">
                 <DocumentArrowUpIcon className='size-5' />
                 {!minimizeSidebar && 'Export Data LMS'}
             </a>
         </li>
         <li>
-            <Link className={`flex items-center py-3 text-base ${url.pathname === '/dashboard-student/profile' ? 'bg-base-200' : ''}`} href='/dashboard-student/profile'>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/announcement-student' ? 'bg-base-200' : ''}`} href='/announcement-student'>
+                <DocumentTextIcon className='size-5' />
+                {!minimizeSidebar && 'Setting Pengumuman'}
+            </Link>
+        </li>
+        <li>
+            <Link className={`flex items-center py-3 text-base ${url.pathname === '/statistic' ? 'bg-base-200' : ''}`} href='/statistic'>
                 <PresentationChartLineIcon className='size-5' />
                 {!minimizeSidebar && 'Statistik Pendaftar'}
             </Link>

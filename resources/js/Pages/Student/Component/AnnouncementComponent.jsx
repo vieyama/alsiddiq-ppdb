@@ -13,7 +13,7 @@ export const AnnouncementComponent = ({ studentRegistration, user, onClickPrint 
             </>
         case 'verified':
             return <div className='flex flex-col items-center'><p className='text-lg'>Selamat Pendaftaran Siswa Testing <span className='font-bold text-white bg-primary'>sudah di-VERIFIKASI</span> Sebagai Calon Peserta Didik Baru, Silahkan Lihat Pengumuman untuk Jadwal Test & Wawancara.</p>
-                <button className="text-white w-fit btn btn-active btn-primary" onClick={() => onClickPrint('verified')}><PrinterIcon className='size-4' /> Cetak Jadwal Test & Wawancara</button>
+                <button className="mt-5 text-white w-fit btn btn-active btn-primary" onClick={() => onClickPrint('verified')}><PrinterIcon className='size-4' /> Cetak Jadwal Test & Wawancara</button>
             </div>
         case 'passed':
             return <div className='flex flex-col items-center'><p className='text-lg'>Selamat <b>{user.name}</b> <span className='font-bold text-white bg-primary'>LULUS</span> Seleksi Sebagai Calon Peserta Didik Baru, Silahkan Cetak Surat Pengumuman Sebagai Bukti Lulus Seleksi.</p><button className="text-white w-fit btn btn-active btn-primary" onClick={() => onClickPrint('passed')}><PrinterIcon className='size-4' /> Cetak Bukti Lulus</button></div>

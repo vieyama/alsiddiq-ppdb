@@ -40,4 +40,9 @@ class Student extends Model
     {
         return $this->hasOne(StudentRegistration::class, 'student_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

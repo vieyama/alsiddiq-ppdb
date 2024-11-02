@@ -38,9 +38,6 @@ const Register = () => {
                     parentData: null,
                     previousSchoolData: null
                 })
-            },
-            onError: (err) => {
-                console.log(err);
             }
         });
     }

@@ -9,34 +9,38 @@ import { ExclamationTriangleIcon, LockClosedIcon } from '@heroicons/react/24/out
 import { DocumentChartBarIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { router, useForm, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
+import UpdateSignatureModal from './Admin/UpdateSignatureModal';
+import { useState } from 'react';
 
 const PpdbSetting = () => {
+    const [isOpenModal, setIsOpenModal] = useState(false)
+
     const ppdbSetting = usePage().props.ppdbSetting
     const { data, setData, patch, errors, processing, recentlySuccessful, setError } =
         useForm({
-            status: ppdbSetting.status,
-            registration_year: ppdbSetting.registration_year,
-            chairman: ppdbSetting.chairman,
+            status: ppdbSetting?.status,
+            registration_year: ppdbSetting?.registration_year,
+            chairman: ppdbSetting?.chairman,
         });
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route('ppdb-setting-update', { id: ppdbSetting.id }));
+        patch(route('ppdb-setting-update', { id: ppdbSetting?.id }));
     };
 
     const switchRegistrationStatus = () => {
-        router.patch(`/ppdb-setting/update/${ppdbSetting.id}`, {
-            status: ppdbSetting.status === 'active' ? 'close' : 'active',
-            ...(ppdbSetting.status === 'close' && { registration_year: Number(ppdbSetting.registration_year) + 1 })
+        router.patch(`/ppdb-setting/update/${ppdbSetting?.id}`, {
+            status: ppdbSetting?.status === 'active' ? 'close' : 'active',
+            ...(ppdbSetting?.status === 'close' && { registration_year: Number(ppdbSetting?.registration_year) + 1 })
         }, {
             onError: err => {
                 setError(err);
             },
             onSuccess: (res) => {
                 setData({
-                    chairman: res.props.ppdbSetting.chairman,
-                    registration_year: res.props.ppdbSetting.registration_year,
-                    status: res.props.ppdbSetting.status,
+                    chairman: res.props.ppdbSetting?.chairman,
+                    registration_year: res.props.ppdbSetting?.registration_year,
+                    status: res.props.ppdbSetting?.status,
                 })
             }
         })
@@ -54,9 +58,9 @@ const PpdbSetting = () => {
                 <div className='mt-6'>
                     <div role="alert" className="alert">
                         <DocumentChartBarIcon className='size-6' />
-                        <span>Status Pendaftaran PPDB Online <b className={`p-1 text-white ${ppdbSetting.status === 'active' ? 'bg-primary' : 'bg-orange-300'}`}>{ppdbSetting.status === 'active' ? 'masih dibuka' : 'telah ditutup'}.</b> Terakhir diubah {dayjs(ppdbSetting?.updated_at).format('DD-MM-YYYY H:m:ss')}.</span>
+                        <span>Status Pendaftaran PPDB Online <b className={`p-1 text-white ${ppdbSetting?.status === 'active' ? 'bg-primary' : 'bg-orange-300'}`}>{ppdbSetting?.status === 'active' ? 'masih dibuka' : 'telah ditutup'}.</b> Terakhir diubah {dayjs(ppdbSetting?.updated_at).format('DD-MM-YYYY H:m:ss')}.</span>
                         <div>
-                            <button onClick={switchRegistrationStatus} className="btn btn-sm btn-primary">{ppdbSetting.status === 'active' ? 'Tutup' : 'Buka'} Pendaftaran</button>
+                            <button onClick={switchRegistrationStatus} className="btn btn-sm btn-primary">{ppdbSetting?.status === 'active' ? 'Tutup' : 'Buka'} Pendaftaran</button>
                         </div>
                     </div>
                 </div>
@@ -118,9 +122,17 @@ const PpdbSetting = () => {
                             </p>
                         </Transition>
                     </div>
-
                 </form>
+                <div className='flex flex-col items-start gap-5 mt-10 mb-5'>
+                    <div className="avatar">
+                        <div className="w-24 rounded">
+                            <img src={ppdbSetting?.signature ? `/uploads/${ppdbSetting?.signature}` : '/ttd.png'} />
+                        </div>
+                    </div>
+                    <button className='btn btn-sm' onClick={() => setIsOpenModal(true)}>Ubah Gambar Tanda Tangan</button>
+                </div>
             </div>
+            <UpdateSignatureModal isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} photo={ppdbSetting?.signature ? `/uploads/${ppdbSetting?.signature}` : '/ttd.png'} />
         </AuthenticatedLayout>
     )
 }

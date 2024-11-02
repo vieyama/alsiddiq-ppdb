@@ -1,12 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { ArrowDownOnSquareIcon, DocumentTextIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
-import {  Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { AnnouncementComponent } from './Component/AnnouncementComponent';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { ProofofRegistrationPrint } from './Component/Print/ProofofRegistrationPrint';
-import { useTranslation } from 'react-i18next';
 import { ProofofVerificationPrint } from './Component/Print/ProofofVerificationPrint';
 import Head from '@/Components/Head';
 import { ProofofPassedPrint } from './Component/Print/ProofofPassedPrint';
@@ -17,6 +16,7 @@ export default function Dashboard() {
     const studentRegistration = usePage().props?.studentRegistration;
     const school = usePage().props?.school;
     const parents = usePage().props?.parent;
+    const ppdbSetting = usePage().props?.ppdbSetting;
 
     const contentRef = useRef();
     const handlePrint = useReactToPrint({
@@ -34,10 +34,10 @@ export default function Dashboard() {
     });
 
     const onClickPrint = (type) => {
-        if(type === 'verified'){
+        if (type === 'verified') {
             handlePrintRegistration()
         }
-        if(type === 'passed'){
+        if (type === 'passed') {
             handlePrintPassed()
         }
     }
@@ -77,9 +77,9 @@ export default function Dashboard() {
             </div>
 
             <div className='hidden'>
-                <ProofofRegistrationPrint ref={contentRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
-                <ProofofVerificationPrint ref={registrationRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
-                <ProofofPassedPrint ref={passedRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} />
+                <ProofofRegistrationPrint ref={contentRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
+                <ProofofVerificationPrint ref={registrationRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
+                <ProofofPassedPrint ref={passedRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
             </div>
         </AuthenticatedLayout>
     );

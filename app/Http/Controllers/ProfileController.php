@@ -12,8 +12,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -39,7 +37,9 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        $request->user()->student->fullname = $request->name;
         $request->user()->save();
+        $request->user()->student->save();
 
         return Redirect::route('profile.edit');
     }

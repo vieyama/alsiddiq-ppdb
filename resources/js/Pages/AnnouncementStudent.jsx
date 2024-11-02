@@ -1,26 +1,22 @@
 import Head from '@/Components/Head'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { convertStatus } from '@/utils/converStatus';
+import { convertStatus, convertStatusForAnnouncemenet } from '@/utils/converStatus';
 import { debounce } from '@/utils/debounce';
-import { CheckIcon, MagnifyingGlassIcon, PrinterIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { router, usePage } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import ModalEditVerification from './Admin/ModalEditVerification';
-import { useReactToPrint } from 'react-to-print';
-import axios from 'axios';
-import { VerificationPrintAdminPrint } from './Student/Component/Print/VerificationPrintAdmin';
+import ModalEditPassedNotes from './Admin/ModalEditPassedNotes';
 
-const VerificationStudent = () => {
+const AnnouncementStudent = () => {
     const students = usePage().props.students;
-    const queryString = window.location.search;
-    const ppdbSetting = usePage().props.ppdbSetting;
+    const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString);
     const search = urlParams.get('search')
     const year = urlParams.get('year')
 
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [student, setStudent] = useState(null)
 
     const [selectedRows, setSelectedRows] = useState(false);
     const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -53,8 +49,7 @@ const VerificationStudent = () => {
     })
 
     const handleVerification = (status, id) => {
-        const newStatus = status === 'verified' ? 'waiting-for-verification' : 'verified'
-        router.patch('/verification-student/update', { id, status: newStatus })
+        router.patch('/verification-student/update', { id, status })
     }
 
     const batchVerification = (status) => {
@@ -63,20 +58,6 @@ const VerificationStudent = () => {
                 setToggleClearRows(!toggledClearRows)
                 setSelectedRows([])
             }
-        })
-    }
-
-    const verificationRef = useRef();
-    const handlePrintVerification = useReactToPrint({
-        contentRef: verificationRef
-    });
-
-    const getStudentDetail = async (id) => {
-        await axios.get(`/student-detail/${id}`).then(res => {
-            setStudent(res.data)
-            setTimeout(() => {
-                handlePrintVerification()
-            }, 1000)
         })
     }
 
@@ -123,22 +104,26 @@ const VerificationStudent = () => {
         },
         {
             name: 'Status Verifikasi',
-            selector: (row) => <div className={`badge text-white ${row.student_registration.status === 'verified' ? 'bg-primary' : 'bg-error'}`}>{convertStatus(row.student_registration.status).text}</div>,
+            selector: (row) => (
+                <div className={`badge text-white ${row.student_registration.status === 'passed' ? 'bg-primary' : 'bg-error'}`}>
+                    {convertStatusForAnnouncemenet(row.student_registration.status).text}
+                </div>
+            ),
             sortable: true,
             width: '165px'
         },
         {
             name: 'Aksi',
-            selector: row => <div className='flex gap-2'>
-                <button className="rounded-md btn btn-default btn-xs" onClick={() => getStudentDetail(row.id)}>
-                    <PrinterIcon className='size-4' />
-                </button>
-                <button onClick={() => handleVerification(row.student_registration.status, row.student_registration.id)} className={`text-black rounded-md btn ${row.student_registration.status === 'waiting-for-verification' ? 'bg-primary' : 'bg-error'} btn-xs`}>
-                    {row.student_registration.status === 'waiting-for-verification' ? <CheckIcon className='size-4 fill-white' /> : <XMarkIcon className='size-4 fill-white' />}
-                </button>
-            </div>,
+            selector: row => (
+                row.student_registration.status !== 'verified' ?
+                    <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('verified', row.id)}><XMarkIcon className='size-4 fill-white' />Batal</button> :
+                    <div className='flex gap-2'>
+                        <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('not_passed', row.id)}><XMarkIcon className='size-4 fill-white' />Tidak Lulus</button>
+                        <button className='font-semibold text-white btn btn-primary btn-xs' onClick={() => handleVerification('passed', row.id)}><CheckIcon className='size-4 fill-white' />Lulus</button>
+                    </div>
+            ),
             sortable: true,
-            width: '125px'
+            width: '220px'
         },
     ];
 
@@ -149,7 +134,7 @@ const VerificationStudent = () => {
                 <span>Data Verifikasi</span>
             </div>
             <div className='pb-3 my-3 border-b-2'>
-                <button className='h-10 font-bold text-white min-h-10 btn btn-primary' onClick={() => setIsOpenModal(true)}>Edit Materi & Jadwal Ujian</button>
+                <button className='h-10 font-bold text-white min-h-10 btn btn-primary' onClick={() => setIsOpenModal(true)}>Edit Keterangan Lulus</button>
             </div>
             <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-5'>
@@ -178,12 +163,9 @@ const VerificationStudent = () => {
                     <div className='flex items-center gap-2 mb-2'>
                         <span className='text-sm font-semibold'><b className='text-red-500'>{selectedRows.length} data terpilih</b>, Update Verifikasi?</span>
                         <div className='flex gap-2'>
-                            <button onClick={() => batchVerification('verified')} className="rounded-md btn btn-default btn-xs bg-primary" title="Verifikasi">
-                                <CheckIcon className='size-4 fill-white' />
-                            </button>
-                            <button onClick={() => batchVerification('waiting-for-verification')} className="rounded-md btn btn-default btn-xs bg-error" title="Batalkan">
-                                <XMarkIcon className='size-4 fill-white' />
-                            </button>
+                            <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => batchVerification('verified')}><XMarkIcon className='size-4 fill-white' />Batalkan</button>
+                            <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => batchVerification('not_passed')}><XMarkIcon className='size-4 fill-white' />Tidak Lulus</button>
+                            <button className='font-semibold text-white btn btn-primary btn-xs' onClick={() => batchVerification('passed')}><CheckIcon className='size-4 fill-white' />Lulus</button>
                         </div>
                     </div>
                 }
@@ -197,13 +179,10 @@ const VerificationStudent = () => {
                 />
             </div>
 
-            {isOpenModal ? <ModalEditVerification isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} /> : null}
-            <div className='hidden'>
-                {student && <VerificationPrintAdminPrint ref={verificationRef} {...student} ppdbSetting={ppdbSetting} />}
-            </div>
+            {isOpenModal ? <ModalEditPassedNotes isOpen={isOpenModal} onClose={() => setIsOpenModal(false)} /> : null}
         </AuthenticatedLayout>
     )
 }
 
-export default VerificationStudent
+export default AnnouncementStudent
 

@@ -7,12 +7,12 @@ import Ttd from './Ttd'
 dayjs.locale('id')
 
 export const ProofofPassedPrint = forwardRef((props, ref) => {
-    const { student, parents, school, studentRegistration } = props
+    const { student, parents, school, studentRegistration, ppdbSetting } = props
 
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop />
+            <Cop registrationYear={Number(studentRegistration.registration_year)} />
             <div className='mb-2'>
                 <div className='flex flex-col items-center mt-2 mb-4'>
                     <h4 align="center" className='font-bold'>
@@ -30,10 +30,10 @@ export const ProofofPassedPrint = forwardRef((props, ref) => {
                 </div>
             </div>
             <span>
-                Seleksi Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {dayjs().format('YYYY')}/{dayjs().add(1, 'year').format('YYYY')}. <br />
+                Seleksi Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}. <br />
                 Demikian pengumuman ini disampaikan untuk dapat digunakan sebagai mestinya.
             </span>
-            <Ttd />
+            <Ttd ppdbSetting={ppdbSetting} />
         </div>
     )
 })

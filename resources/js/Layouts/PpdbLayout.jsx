@@ -16,7 +16,7 @@ const PpdbLayout = ({ children, isFixed = false, user = null }) => {
 
             <footer className="p-4 footer footer-center bg-primary text-base-content">
                 <aside>
-                    <p>Copyright © {t('title')} 2024 | All Rights Reserved.</p>
+                    <p>Copyright © {t('title')} {new Date().getFullYear()} | All Rights Reserved.</p>
                 </aside>
             </footer>
 

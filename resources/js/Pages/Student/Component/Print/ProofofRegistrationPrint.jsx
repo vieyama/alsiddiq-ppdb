@@ -7,13 +7,13 @@ import Ttd from './Ttd'
 dayjs.locale('id')
 
 export const ProofofRegistrationPrint = forwardRef((props, ref) => {
-    const { student, parents, school, studentRegistration } = props
+    const { student, parents, school, studentRegistration, ppdbSetting } = props
 
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop />
-            <div className='mb-8'>
+            <Cop registrationYear={Number(studentRegistration.registration_year)} />
+            <div className='mb-5'>
                 <h4 align="center" className='mt-2 mb-4 font-bold'>
                     <u>BUKTI PENDAFTARAN</u>
                 </h4>
@@ -22,16 +22,15 @@ export const ProofofRegistrationPrint = forwardRef((props, ref) => {
                         PANITIA PENERIAMAAN PESERTA DIDIK BARU (PPDB) <br />
                         AL SIDDIQ INTERNATIONAL
                         <br />
-                        TAHUN PELAJARAN {dayjs().format('YYYY')}/{dayjs().add(1, 'year').format('YYYY')}
+                        TAHUN PELAJARAN {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}
                     </center>
                 </b>
             </div>
 
             <TableStudent parents={parents} studentRegistration={studentRegistration} student={student} school={school} />
+            <Ttd ppdbSetting={ppdbSetting} />
 
-            <Ttd />
-
-            <div className='flex-1 mt-6'>
+            <div className='flex-1 mt-3'>
                 <b>
                     <u>Siapkan Berkas Berikut Ketika anda melakukan verifikasi :</u>
                 </b>

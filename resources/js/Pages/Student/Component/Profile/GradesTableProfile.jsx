@@ -29,18 +29,18 @@ const GradesTableProfile = ({ report, grades }) => {
                         {report?.map((item, key) => (
                             <tr key={key}>
                                 <td className="border">{item.subject}</td>
-                                <td className="border">{item.grade_smt_1}</td>
-                                <td className="border">{item.grade_smt_2}</td>
-                                <td className="border">{item.grade_smt_3}</td>
-                                <td className="border">{item.grade_smt_4}</td>
-                                <td className="border">{item.grade_smt_5}</td>
-                                <td className="border">{item.average}</td>
+                                <td className="border">{item.grade_smt_1 ?? 0}</td>
+                                <td className="border">{item.grade_smt_2 ?? 0}</td>
+                                <td className="border">{item.grade_smt_3 ?? 0}</td>
+                                <td className="border">{item.grade_smt_4 ?? 0}</td>
+                                <td className="border">{item.grade_smt_5 ?? 0}</td>
+                                <td className="border">{item.average ?? 0}</td>
                             </tr>
                         ))}
                         <tr>
                             <td className="border" colSpan={6}>Rata-Rata Rapor</td>
                             <td className="border">
-                                {calculateAverage(report.flatMap(item => item.average))}
+                                {isNaN(calculateAverage(report.flatMap(item => item.average))) ? 0 : calculateAverage(report.flatMap(item => item.average))}
                             </td>
                         </tr>
                     </tbody>
@@ -70,7 +70,7 @@ const GradesTableProfile = ({ report, grades }) => {
                             </tr>
                             <tr>
                                 <td className="font-bold border">Rata–Rata Nilai USBN</td>
-                                <td className="border">{calculateAverage(usbn.flatMap(item => item.grade))}</td>
+                                <td className="border">{isNaN(calculateAverage(usbn.flatMap(item => item.grade))) ? 0 : calculateAverage(usbn.flatMap(item => item.grade))}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -98,7 +98,7 @@ const GradesTableProfile = ({ report, grades }) => {
                             </tr>
                             <tr>
                                 <td className="font-bold border">Rata–Rata Nilai UNKP/UNBK</td>
-                                <td className="border">{calculateAverage(unbk.flatMap(item => item.grade))}</td>
+                                <td className="border">{isNaN(calculateAverage(usbn.flatMap(item => item.grade))) ? 0 : calculateAverage(usbn.flatMap(item => item.grade))}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PpdbSetting;
 use App\Models\Student;
 use App\Models\StudentGrades;
 use App\Models\StudentParent;
@@ -27,11 +28,11 @@ class StudentController extends Controller
         $report->transform(function ($grade) {
             // Calculate the average of grade_smt_1 to grade_smt_5
             $average = (
-            $grade->grade_smt_1 +
-            $grade->grade_smt_2 +
-            $grade->grade_smt_3 +
-            $grade->grade_smt_4 +
-            $grade->grade_smt_5
+                $grade->grade_smt_1 +
+                $grade->grade_smt_2 +
+                $grade->grade_smt_3 +
+                $grade->grade_smt_4 +
+                $grade->grade_smt_5
             ) / 5;
 
             // Add the average to the current grade item
@@ -76,18 +77,21 @@ class StudentController extends Controller
     public function index()
     {
         $studentData = self::getStudentData();
+        $ppdbSetting = PpdbSetting::findOrFail(1);
 
         return Inertia::render('Student/Dashboard', [
             'student' => $studentData['student'],
             'studentRegistration' => $studentData['studentRegistration'],
             'parent' => $studentData['parent'],
-            'school' => $studentData['school']
+            'school' => $studentData['school'],
+            'ppdbSetting' => $ppdbSetting
         ]);
     }
 
     public function announcement()
     {
         $studentData = self::getStudentData();
+        $ppdbSetting = PpdbSetting::findOrFail(1);
 
         return Inertia::render('Student/Announcement', [
             'student' => $studentData['student'],
@@ -96,12 +100,14 @@ class StudentController extends Controller
             'school' => $studentData['school'],
             'grades' => $studentData['grades'],
             'report' => $studentData['report'],
+            'ppdbSetting' => $ppdbSetting
         ]);
     }
 
     public function profile()
     {
         $studentData = self::getStudentData();
+        $ppdbSetting = PpdbSetting::findOrFail(1);
 
         return Inertia::render('Student/Profile', [
             'student' => $studentData['student'],
@@ -110,6 +116,7 @@ class StudentController extends Controller
             'school' => $studentData['school'],
             'grades' => $studentData['grades'],
             'report' => $studentData['report'],
+            'ppdbSetting' => $ppdbSetting
         ]);
     }
 }
