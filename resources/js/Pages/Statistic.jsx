@@ -170,7 +170,7 @@ export default function Statistic() {
             </div>
 
             <div className='p-4 mt-6 shadow-lg'>
-                <Line data={getDataChart} options={options} />
+                <Line data={getDataChart} options={options} height={110} />
             </div>
         </AuthenticatedLayout>
     );

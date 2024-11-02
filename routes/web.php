@@ -47,6 +47,7 @@ Route::middleware(['auth', CheckUserRole::class])->group(function () {
     Route::patch('/ppdb-setting/update/{id}', [AdminController::class, 'updatePpdbSetting'])->name('ppdb-setting-update');
     Route::post('/ppdb-setting-upload', [AdminController::class, 'updateSignature'])->name('ppdb-setting.update-photo');
     Route::get('/student-detail/{id}', [AdminController::class, 'getStudentData'])->name('student-data');
+    Route::get('/statistic', [AdminController::class, 'statistic'])->name('statistic');
     Route::get('/export-student', [
     AdminController::class, 'exportStudent'])->name('export-student');
     Route::get('/export-student-lms', [AdminController::class, 'exportStudentLMS'])->name('export-student-lms');
