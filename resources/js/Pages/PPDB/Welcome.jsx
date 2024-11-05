@@ -173,14 +173,14 @@ const Welcome = () => {
                     <span className="z-10 text-4xl font-bold md:text-5xl">{t('contact')}</span>
                 </div>
 
-                <div className="px-0 md:px-28">
+                <div className="z-10 px-0 md:px-28">
                     <h5 className="text-2xl">
                         {t('title')}
                     </h5>
                     <span className="text-lg">
                         Jl. H. Toha RT 002 RW 006 Jatimakmur Pondok Gede Kota Bekasi Jawa Barat - Indonesia
                     </span>
-                    <div className="flex justify-center gap-10 mt-5">
+                    <div className="flex flex-col items-center justify-center gap-4 mt-5 md:gap-10 md:flex-row">
                         <div className="flex items-center gap-2">
                             <PhoneIcon className="size-6" />
                             <span>+62 819 4611 8111</span>
