@@ -26,7 +26,7 @@ const Register = () => {
 
     const handleNext = (data) => {
         setValues({ ...values, ...data });
-        router.get(`/ppdb/register?step=${Number(step) + 1}`, _, {
+        router.get(`/ppdb/register?step=${Number(step) + 1}`, {
             headers: {
                 'X-CSRF-TOKEN': csrfToken
             },

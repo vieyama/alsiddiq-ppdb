@@ -61,7 +61,7 @@ export default function Dashboard() {
             <Head>
                 <title>Dashboard</title>
                 <meta head-key="description" name="description" content="AL SIDDIQ INTERNATIONAL SCHOOL PPDB" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="icon" type="image/svg+xml" href="/logo-white.png" />
             </Head>
 
             <div role="alert" className="p-4 text-center bg-primary">

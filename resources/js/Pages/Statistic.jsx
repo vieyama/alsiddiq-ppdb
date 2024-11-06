@@ -151,7 +151,7 @@ export default function Statistic() {
             <Head>
                 <title>Statistic</title>
                 <meta head-key="description" name="description" content="AL SIDDIQ INTERNATIONAL SCHOOL PPDB" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="icon" type="image/svg+xml" href="/logo-white.png" />
             </Head>
 
             <div className='flex justify-end w-full mb-4'>
