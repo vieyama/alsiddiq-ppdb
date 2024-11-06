@@ -12,7 +12,7 @@ export const ProofofRegistrationPrint = forwardRef((props, ref) => {
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop registrationYear={Number(studentRegistration.registration_year)} />
+            <Cop registrationYear={Number(studentRegistration?.registration_year)} />
             <div className='mb-5'>
                 <h4 align="center" className='mt-2 mb-4 font-bold'>
                     <u>BUKTI PENDAFTARAN</u>
@@ -22,7 +22,7 @@ export const ProofofRegistrationPrint = forwardRef((props, ref) => {
                         PANITIA PENERIAMAAN PESERTA DIDIK BARU (PPDB) <br />
                         AL SIDDIQ INTERNATIONAL
                         <br />
-                        TAHUN PELAJARAN {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}
+                        TAHUN PELAJARAN {studentRegistration?.registration_year} / {Number(studentRegistration?.registration_year) + 1}
                     </center>
                 </b>
             </div>

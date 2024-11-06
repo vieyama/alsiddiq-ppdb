@@ -12,7 +12,7 @@ export const ProofofVerificationPrint = forwardRef((props, ref) => {
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop registrationYear={Number(studentRegistration.registration_year)} />
+            <Cop registrationYear={Number(studentRegistration?.registration_year)} />
             <div className='mb-2'>
                 <h4 align="center" className='mt-2 mb-4 font-bold'>
                     <u>BUKTI VERIFIKASI</u>
@@ -22,7 +22,7 @@ export const ProofofVerificationPrint = forwardRef((props, ref) => {
                         PANITIA PENERIAMAAN PESERTA DIDIK BARU (PPDB) <br />
                         AL SIDDIQ INTERNATIONAL
                         <br />
-                        TAHUN PELAJARAN {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}
+                        TAHUN PELAJARAN {studentRegistration?.registration_year} / {Number(studentRegistration?.registration_year) + 1}
                     </center>
                 </b>
             </div>
@@ -35,7 +35,7 @@ export const ProofofVerificationPrint = forwardRef((props, ref) => {
                 </div>
             </div>
             <span>
-                Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}. <br />
+                Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {studentRegistration?.registration_year} / {Number(studentRegistration?.registration_year) + 1}. <br />
                 Demikian pengumuman ini disampaikan untuk dapat digunakan sebagai mestinya.
             </span>
             <Ttd ppdbSetting={ppdbSetting} />

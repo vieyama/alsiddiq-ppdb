@@ -41,6 +41,18 @@ const StudentTableProfile = ({ student, studentRegistration }) => {
                         <td>{student?.pob}, {dayjs(student?.dob).format('DD MMMM YYYY')}</td>
                     </tr>
                     <tr>
+                        <th>Jarak dari rumah ke sekolah:</th>
+                        <td className='capitalize'>{student?.school_distance}</td>
+                    </tr>
+                    <tr>
+                        <th>Hobi:</th>
+                        <td className='capitalize'>{student?.hobby}</td>
+                    </tr>
+                    <tr>
+                        <th>Cita-cita:</th>
+                        <td className='capitalize'>{student?.aspiration}</td>
+                    </tr>
+                    <tr>
                         <th>Agama:</th>
                         <td className='capitalize'>{student?.religion}</td>
                     </tr>

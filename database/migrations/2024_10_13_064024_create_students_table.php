@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('phone');
             $table->string('pob');
             $table->string('religion');
+            $table->string('school_distance');
+            $table->string('hobby');
+            $table->string('aspiration');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

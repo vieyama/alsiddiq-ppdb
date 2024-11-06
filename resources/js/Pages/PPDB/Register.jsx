@@ -1,6 +1,6 @@
 import React from 'react'
 import PpdbLayout from '@/Layouts/PpdbLayout'
-import { router } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next';
 import { atomWithStorage } from 'jotai/utils'
 import First from './components/Form/Step/First';
@@ -22,16 +22,23 @@ const Register = () => {
     const { t } = useTranslation();
     const [values, setValues] = useAtom(registerDataAtom)
     const step = urlParams.get('step') ?? '1'
+    const csrfToken = usePage().props.csrf_token;
 
     const handleNext = (data) => {
         setValues({ ...values, ...data });
-        router.get(`/ppdb/register?step=${Number(step) + 1}`)
+        router.get(`/ppdb/register?step=${Number(step) + 1}`, _, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        })
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         router.post("/ppdb/store", values, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
             onSuccess: () => {
                 setValues({
                     studentData: null,

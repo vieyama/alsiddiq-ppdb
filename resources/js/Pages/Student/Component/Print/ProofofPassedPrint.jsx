@@ -12,13 +12,13 @@ export const ProofofPassedPrint = forwardRef((props, ref) => {
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop registrationYear={Number(studentRegistration.registration_year)} />
+            <Cop registrationYear={Number(studentRegistration?.registration_year)} />
             <div className='mb-2'>
                 <div className='flex flex-col items-center mt-2 mb-4'>
                     <h4 align="center" className='font-bold'>
                         <u>S U R A T  P E N G U M U M A N</u>
                     </h4>
-                    <span>No : 420/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/PPDB.AL-SIDDIQ/{studentRegistration.registration_year}</span>
+                    <span>No : 420/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/PPDB.AL-SIDDIQ/{studentRegistration?.registration_year}</span>
                 </div>
             </div>
             <span>Ketua PPDB Al Siddiq International dengan ini menyatakan bahwa :</span>
@@ -30,7 +30,7 @@ export const ProofofPassedPrint = forwardRef((props, ref) => {
                 </div>
             </div>
             <span>
-                Seleksi Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {studentRegistration.registration_year} / {Number(studentRegistration.registration_year) + 1}. <br />
+                Seleksi Sebagai Calon Peserta Didik Sekolah AL SIDDIQ INTERNATIONAL SCHOOL tahun ajaran {studentRegistration?.registration_year} / {Number(studentRegistration?.registration_year) + 1}. <br />
                 Demikian pengumuman ini disampaikan untuk dapat digunakan sebagai mestinya.
             </span>
             <Ttd ppdbSetting={ppdbSetting} />

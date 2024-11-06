@@ -11,7 +11,7 @@ export const VerificationPrintAdminPrint = forwardRef((props, ref) => {
     return (
         <div className='p-10 text-black font-calibri' ref={ref}>
             {/* cop */}
-            <Cop registrationYear={Number(studentRegistration.registration_year)} />
+            <Cop registrationYear={Number(studentRegistration?.registration_year)} />
             <div className='mb-2'>
                 <h4 align="center" className='mt-2 mb-4 font-bold'>
                     <u>HASIL VERIFIKASI PENDAFTARAN PPDB {studentRegistration?.registration_year}</u>

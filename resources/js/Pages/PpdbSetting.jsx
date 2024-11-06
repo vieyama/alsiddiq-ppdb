@@ -95,11 +95,11 @@ const PpdbSetting = () => {
 
                         <TextInput
                             type="number"
-                            min={data.registration_year}
-                            max={data.registration_year + 1}
+                            min={data?.registration_year}
+                            max={data?.registration_year + 1}
                             id="chairman"
                             className="block w-full mt-1"
-                            value={data.registration_year}
+                            value={data?.registration_year}
                             onChange={(e) => setData('registration_year', e.target.value)}
                             required
                             autoComplete="registration_year"

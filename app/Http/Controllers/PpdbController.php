@@ -75,7 +75,10 @@ class PpdbController extends Controller
                 'nisn' => $request->studentData['nisn'],
                 'phone' => $request->studentData['phone'],
                 'pob' => $request->studentData['pob'],
-                'religion' => $request->studentData['religion']
+                'religion' => $request->studentData['religion'],
+                'school_distance' => $request->studentData['schoolDistance'],
+                'hobby' => $request->studentData['hobby'],
+                'aspiration' => $request->studentData['aspiration'],
             ]);
 
             StudentRegistration::create([
@@ -119,16 +122,17 @@ class PpdbController extends Controller
                     'phone' => $request->parentData['guardian']['phone'],
                 ]);
             }
-
-            StudentPrevSchool::create([
-                'exam_model' => $request->previousSchoolData['examModel'],
-                'school_adress' => $request->previousSchoolData['schoolAdress'],
-                'school_name' => $request->previousSchoolData['schoolName'],
-                'school_npsn' => $request->previousSchoolData['schoolNpsn'],
-                'school_status' => $request->previousSchoolData['schoolStatus'],
-                'year_of_graduation' => $request->previousSchoolData['yearOfGraduation'],
-                'student_id' => $student->id,
-            ]);
+            if(!empty($request->previousSchoolData['schoolNpsn'])){
+                StudentPrevSchool::create([
+                    'exam_model' => $request->previousSchoolData['examModel'] ?? '',
+                    'school_adress' => $request->previousSchoolData['schoolAdress'] ?? '',
+                    'school_name' => $request->previousSchoolData['schoolName'] ?? '',
+                    'school_npsn' => $request->previousSchoolData['schoolNpsn'] ?? '',
+                    'school_status' => $request->previousSchoolData['schoolStatus'] ?? '',
+                    'year_of_graduation' => $request->previousSchoolData['yearOfGraduation'] ?? '',
+                    'student_id' => $student->id,
+                ]);
+            }
 
             // Commit the transaction
             DB::commit();
@@ -139,8 +143,7 @@ class PpdbController extends Controller
         } catch (Exception $e) {
             // Rollback transaction for other exceptions
             DB::rollBack();
-
-            return response()->json(['error' => 'An unexpected error occurred.'], 500);
+            return redirect(route('ppdb', absolute: false))->withErrors(['error' => 'Something went wrong!']);
         }
     }
 

@@ -9,6 +9,7 @@ import { Provider } from 'jotai'
 import './i18n'
 
 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 const appName = import.meta.env.VITE_APP_NAME || 'AL SIDDIQ INTERNATIONAL SCHOOL';
 
 createInertiaApp({

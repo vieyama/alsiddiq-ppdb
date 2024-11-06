@@ -4,11 +4,12 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Link, router, useForm } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import Head from '@/Components/Head';
 
 export default function Login({ status, canResetPassword }) {
+    const csrfToken = usePage().props.csrf_token;
     const { data, setData, processing, errors } = useForm({
         email: '',
         password: '',
@@ -18,7 +19,12 @@ export default function Login({ status, canResetPassword }) {
     const [error, setError] = useState('')
     const submit = (values) => {
         values.preventDefault();
-        router.post("login", data, { onError: err => setError(err.email) });
+        router.post(route('login'), data, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            onError: (err) => setError(err.email),
+        });
     };
 
     return (

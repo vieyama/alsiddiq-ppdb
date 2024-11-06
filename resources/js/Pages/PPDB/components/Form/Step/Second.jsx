@@ -74,13 +74,18 @@ const Second = ({ handleNext, parentData }) => {
                             </div>
                             <select className="select select-bordered" defaultValue="" {...register(`${item}.occupation`, { required: item !== 'guardian' })}>
                                 <option value="" disabled>{t('form.selectItem', { item: t('form.occupation') })}</option>
-                                {item === 'mother' && <option value="housewife">{t('form.housewife')}</option>}
-                                <option value="labor">{t('form.labor')}</option>
-                                <option value="farmer">{t('form.farmer')}</option>
-                                <option value="enterpreneur">{t('form.enterpreneur')}</option>
-                                <option value="militaryPolice">{t('form.militaryPolice')}</option>
-                                <option value="fisherman">{t('form.fisherman')}</option>
-                                {item !== 'mother' && <option value="housewife">{t('form.housewife')}</option>}
+                                {item === 'mother' && <option value="Ibu Rumah Tangga">{t('form.housewife')}</option>}
+                                <option value="PNS/TNI/POLRI">PNS/TNI/POLRI</option>
+                                <option value="Buruh">{t('form.labor')}</option>
+                                <option value="Petani">{t('form.farmer')}</option>
+                                <option value="Nelayan">{t('form.fisherman')}</option>
+                                <option value="Wirausaha">{t('form.entrepreneur')}</option>
+                                <option value="Wiraswasta">{t('form.selfEmployed')}</option>
+                                <option value="Karyawan BUMN">{t('form.stateOwnedEmployees')}</option>
+                                <option value="Tenaga Kerja Indonesia">{t('form.indonesianWorkers')}</option>
+                                <option value="Pensiunan">{t('form.retiree')}</option>
+                                <option value="Sudah Meninggal">{t('form.passedAway')}</option>
+                                <option value="Lainnya">{t('form.otherJob')}</option>
                             </select>
                             {errors?.[item]?.occupation?.type === "required" && <div className="label">
                                 <span className="text-red-500 label-text-alt">{t('required')}</span>
@@ -92,6 +97,7 @@ const Second = ({ handleNext, parentData }) => {
                             </div>
                             <select className="select select-bordered" defaultValue="" {...register(`${item}.income`, { required: item !== 'guardian' })}>
                                 <option value="" disabled>{t('form.selectItem', { item: t('form.income') })}</option>
+                                <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option>
                                 <option value="< 10 Juta (Million)">&lt; 10 Juta (Million)</option>
                                 <option value="10 - 20 Juta (Million)">10 - 20 Juta (Million)</option>
                                 <option value="20 - 30 Juta (Million)">20 - 30 Juta (Million)</option>

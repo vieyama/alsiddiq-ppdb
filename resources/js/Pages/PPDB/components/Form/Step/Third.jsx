@@ -45,18 +45,18 @@ const Third = ({ handleNext, previousSchoolData }) => {
             <div className='flex flex-col w-full gap-5 md:flex-row'>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.schoolNpsn')} className="label-text" required />
+                        <Label title={t('form.schoolNpsn')} className="label-text" />
                     </div>
-                    <TextInput type="text" placeholder={t('form.schoolNpsn')} className="w-full minput input-bordered" {...register('schoolNpsn', { required: true })} />
+                    <TextInput type="text" placeholder={t('form.schoolNpsn')} className="w-full minput input-bordered" {...register('schoolNpsn', { required: false })} />
                     {errors?.schoolNpsn?.type === "required" && <div className="label">
                         <span className="text-red-500 label-text-alt">{t('required')}</span>
                     </div>}
                 </label>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.schoolName')} className="label-text" required />
+                        <Label title={t('form.schoolName')} className="label-text" />
                     </div>
-                    <TextInput type="text" placeholder={t('form.schoolName')} className="w-full minput input-bordered" {...register('schoolName', { required: true })} />
+                    <TextInput type="text" placeholder={t('form.schoolName')} className="w-full minput input-bordered" {...register('schoolName', { required: false })} />
                     {errors?.schoolName?.type === "required" && <div className="label">
                         <span className="text-red-500 label-text-alt">{t('required')}</span>
                     </div>}
@@ -65,9 +65,9 @@ const Third = ({ handleNext, previousSchoolData }) => {
             <div className='flex flex-col w-full gap-5 md:flex-row'>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.schoolStatus')} className="label-text" required />
+                        <Label title={t('form.schoolStatus')} className="label-text" />
                     </div>
-                    <select defaultValue="" className="select select-bordered" {...register('schoolStatus', { required: true })}>
+                    <select defaultValue="" className="select select-bordered" {...register('schoolStatus', { required: false })}>
                         <option value="" disabled>{t('form.selectItem', { item: t('form.schoolStatus') })}</option>
                         <option value="NEGERI | Public">NEGERI | Public</option>
                         <option value="SWASTA | Private">SWASTA | Private</option>
@@ -78,9 +78,9 @@ const Third = ({ handleNext, previousSchoolData }) => {
                 </label>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.examModel')} className="label-text" required />
+                        <Label title={t('form.examModel')} className="label-text" />
                     </div>
-                    <select className="select select-bordered" defaultValue="" {...register('examModel', { required: true })}>
+                    <select className="select select-bordered" defaultValue="" {...register('examModel', { required: false })}>
                         <option value="" disabled>{t('form.selectItem', { item: t('form.examModel') })}</option>
                         <option value="UNBK | Computer-Based National Exam">UNBK | Computer-Based National Exam</option>
                         <option value="UNPK | Paper-and-pencil-based National Exam">UNPK | Paper-and-pencil-based National Exam</option>
@@ -93,18 +93,18 @@ const Third = ({ handleNext, previousSchoolData }) => {
             <div className='flex flex-col w-full gap-5 md:flex-row'>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.schoolAdress')} className="label-text" required />
+                        <Label title={t('form.schoolAdress')} className="label-text" />
                     </div>
-                    <textarea className="textarea textarea-bordered" placeholder={t('form.schoolAdress')}  {...register('schoolAdress', { required: true })}></textarea>
+                    <textarea className="textarea textarea-bordered" placeholder={t('form.schoolAdress')}  {...register('schoolAdress', { required: false })}></textarea>
                     {errors?.schoolAdress?.type === "required" && (<div className="label">
                         <span className="text-red-500 label-text-alt">{t('required')}</span>
                     </div>)}
                 </label>
                 <label className="w-full form-control">
                     <div className="label">
-                        <Label title={t('form.yearOfGraduation')} className="label-text" required />
+                        <Label title={t('form.yearOfGraduation')} className="label-text" />
                     </div>
-                    <select className="select select-bordered" defaultValue="" {...register('yearOfGraduation', { required: true })}>
+                    <select className="select select-bordered" defaultValue="" {...register('yearOfGraduation', { required: false })}>
                         <option value="" disabled>{t('form.selectItem', { item: t('form.yearOfGraduation') })}</option>
                         {yearsOptions().map((item, key) => (
                             <option key={key} value={item}>{item}</option>

@@ -1,14 +1,30 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Bars3Icon } from '@heroicons/react/24/solid';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import SidebarItem from './SidebarItem';
 import { minimizeSidebarAtom } from '@/atom/sidebar';
 
 const ProtectedNavbar = ({ user }) => {
+    const csrfToken = usePage().props.csrf_token;
     const [minimizeSidebar, setMinimize] = useAtom(minimizeSidebarAtom)
     const { t } = useTranslation()
+    async function handleLogout() {
+        try {
+            await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+            });
+        } catch (error) {
+            console.error("Error during logout:", error);
+            // Reload the page to refresh the CSRF token
+            window.location.reload();
+        }
+    }
     return (
         <div className="fixed z-[1] px-5 navbar bg-primary drawer">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -42,7 +58,20 @@ const ProtectedNavbar = ({ user }) => {
                         tabIndex={0}
                         className="z-10 p-2 mt-3 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                         <li><Link className='py-2' href="/profile">Profile</Link></li>
-                        <li><Link className='py-2' href={route('logout')} method="post" as="button">Logout</Link></li>
+                        <li>
+                            {/* <button onClick={handleLogout}>Logout</button> */}
+                            <Link
+                                className="py-2"
+                                href={route('logout')}
+                                method="post"
+                                as="button"
+                                headers={{ 'X-CSRF-TOKEN': csrfToken }}
+                            >
+                                Logout
+                            </Link>
+                        </li>
+
+                        {/* <li><Link className='py-2' href={route('logout')} method="post" as="button">Logout</Link></li> */}
                     </ul>
                 </div>
             </div>

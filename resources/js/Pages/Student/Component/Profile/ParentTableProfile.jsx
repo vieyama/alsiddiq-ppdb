@@ -25,7 +25,7 @@ const ParentTableProfile = ({ parent }) => {
                             </tr>
                             <tr>
                                 <th>Pekerjaan:</th>
-                                <td>{item.occupation === '-' ? item.occupation : t(`form.${item.occupation}`)}</td>
+                                <td>{item.occupation}</td>
                             </tr>
                             <tr>
                                 <th>Penghasilan:</th>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\StudentController;
@@ -17,7 +18,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('ppdb');
 
 Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.welcome');
 Route::get('/ppdb/register', [PpdbController::class, 'register'])->name('ppdb.register');
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/update-photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->name('logout');
 });
 
 Route::middleware(['auth', CheckUserRole::class])->group(function () {

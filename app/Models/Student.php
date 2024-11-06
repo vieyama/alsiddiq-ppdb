@@ -28,6 +28,9 @@ class Student extends Model
         'phone',
         'pob',
         'religion',
+        'school_distance',
+        'hobby',
+        'aspiration',
         'user_id'
     ];
 

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import TextInput from '@/Components/TextInput';
 import Label from '../Label';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import Toast from '@/Components/Toast';
 
 const First = ({ handleNext, studentData }) => {
@@ -11,6 +11,7 @@ const First = ({ handleNext, studentData }) => {
     const { t } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm();
     const [registerError, setRegisterError] = useState(null)
+    const csrfToken = usePage().props.csrf_token;
 
     useEffect(() => {
         if (studentData) {
@@ -22,6 +23,9 @@ const First = ({ handleNext, studentData }) => {
 
     const onSubmit = data => {
         router.post("/ppdb/check", { nis: data.nis, nisn: data.nisn }, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
             onSuccess: () => {
                 handleNext({ studentData: data })
             },
@@ -195,6 +199,39 @@ const First = ({ handleNext, studentData }) => {
                 </div>
 
                 <div className='flex flex-col w-full gap-5 md:flex-row'>
+                    <label className="w-full form-control">
+                        <div className="label">
+                            <Label title={t('form.schoolDistance')} className="label-text" required />
+                        </div>
+                        <select className="select select-bordered" {...register('schoolDistance', { required: true })}>
+                            <option value="1 KM">1 KM</option>
+                            <option value="> 1 KM">&gt; 1 KM</option>
+                        </select>
+                        {errors?.schoolDistance?.type === "required" && (<div className="label">
+                            <span className="text-red-500 label-text-alt">{t('required')}</span>
+                        </div>)}
+                    </label>
+                    <label className="w-full form-control">
+                        <div className="label">
+                            <Label title={t('form.hobby')} className="label-text" required />
+                        </div>
+                        <TextInput {...register('hobby', { required: t('required') })} />
+                        {errors?.hobby?.message && (<div className="label">
+                            <span className="text-red-500 label-text-alt">{errors?.hobby?.message}</span>
+                        </div>)}
+                    </label>
+                </div>
+
+                <div className='flex flex-col w-full gap-5 md:flex-row'>
+                    <label className="w-full form-control">
+                        <div className="label">
+                            <Label title={t('form.aspiration')} className="label-text" required />
+                        </div>
+                        <TextInput {...register('aspiration', { required: t('required') })} />
+                        {errors?.aspiration?.message && (<div className="label">
+                            <span className="text-red-500 label-text-alt">{errors?.aspiration?.message}</span>
+                        </div>)}
+                    </label>
                     <label className="w-full form-control">
                         <div className="label">
                             <Label title={t('form.address')} className="label-text" required />
