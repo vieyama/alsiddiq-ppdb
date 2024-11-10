@@ -3,10 +3,11 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import Head from '@/Components/Head';
 
 export default function Register() {
+    const csrfToken = usePage().props.csrf_token;
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -18,6 +19,9 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
         post(route('register'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };

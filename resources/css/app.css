@@ -43,3 +43,28 @@ canvas {
 .ql-container {
     height: 200px !important;
 }
+
+
+@media print {
+  .printable {
+    margin: 0;
+    width: auto;
+    height: auto;
+    page-break-after: always;
+  }
+
+  .printable header,
+  .printable footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+  }
+
+  .printable header {
+    top: 0;
+  }
+
+  .printable footer {
+    bottom: 0;
+  }
+}

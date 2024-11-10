@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 
 const ModalEditVerification = ({ isOpen, onClose }) => {
     const ppdbSetting = usePage().props.ppdbSetting
+    const csrfToken = usePage().props.csrf_token;
 
     const { data, setData, patch, errors, processing, recentlySuccessful, setError } =
         useForm({
@@ -48,7 +49,11 @@ const ModalEditVerification = ({ isOpen, onClose }) => {
     const submit = (e) => {
         e.preventDefault();
         patch(route('ppdb-setting-update', { id: ppdbSetting?.id }), {
-            onSuccess: () => onClose()});
+            onSuccess: () => onClose(),
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        });
     };
 
     return (

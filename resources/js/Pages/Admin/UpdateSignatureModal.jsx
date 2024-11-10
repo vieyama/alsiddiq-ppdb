@@ -1,8 +1,9 @@
 import Modal from '@/Components/Modal'
-import { useForm } from '@inertiajs/react'
+import { useForm, usePage } from '@inertiajs/react'
 import React from 'react'
 
 const UpdateSignatureModal = ({ isOpen, onClose, photo }) => {
+    const csrfToken = usePage().props.csrf_token;
     const { setData, errors, post } = useForm({
         file: null
     });
@@ -13,7 +14,10 @@ const UpdateSignatureModal = ({ isOpen, onClose, photo }) => {
             onSuccess: () => {
                 setData("file", null)
                 onClose()
-            }
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
         });
     }
 

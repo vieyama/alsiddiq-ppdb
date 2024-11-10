@@ -1,16 +1,18 @@
 import Head from '@/Components/Head'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { convertStatus, convertStatusForAnnouncemenet } from '@/utils/converStatus';
+import { convertStatusForAnnouncemenet } from '@/utils/converStatus';
 import { debounce } from '@/utils/debounce';
 import { CheckIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
-import ModalEditVerification from './Admin/ModalEditVerification';
 import ModalEditPassedNotes from './Admin/ModalEditPassedNotes';
+import { yearsOptions } from '@/utils/yearOptions';
 
 const AnnouncementStudent = () => {
     const students = usePage().props.students;
+    const ppdbSetting = usePage().props.ppdbSetting;
+    const csrfToken = usePage().props.csrf_token;
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString);
     const search = urlParams.get('search')
@@ -20,17 +22,6 @@ const AnnouncementStudent = () => {
 
     const [selectedRows, setSelectedRows] = useState(false);
     const [toggledClearRows, setToggleClearRows] = useState(false);
-
-    const yearsOptions = () => {
-        const currentYear = new Date().getFullYear();
-        const yearsList = [];
-
-        for (let i = 0; i <= 20; i++) {
-            yearsList.push(currentYear - i);
-        }
-
-        return yearsList;
-    }
 
     const handleChange = ({ selectedRows }) => {
         setSelectedRows(selectedRows);
@@ -49,7 +40,11 @@ const AnnouncementStudent = () => {
     })
 
     const handleVerification = (status, id) => {
-        router.patch('/verification-student/update', { id, status })
+        router.patch('/verification-student/update', { id, status }, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
     }
 
     const batchVerification = (status) => {
@@ -57,7 +52,10 @@ const AnnouncementStudent = () => {
             onSuccess: () => {
                 setToggleClearRows(!toggledClearRows)
                 setSelectedRows([])
-            }
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
         })
     }
 
@@ -116,10 +114,10 @@ const AnnouncementStudent = () => {
             name: 'Aksi',
             selector: row => (
                 row.student_registration.status !== 'verified' ?
-                    <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('verified', row.id)}><XMarkIcon className='size-4 fill-white' />Batal</button> :
+                    <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('verified', row.student_registration.id)}><XMarkIcon className='size-4 fill-white' />Batal</button> :
                     <div className='flex gap-2'>
-                        <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('not_passed', row.id)}><XMarkIcon className='size-4 fill-white' />Tidak Lulus</button>
-                        <button className='font-semibold text-white btn btn-primary btn-xs' onClick={() => handleVerification('passed', row.id)}><CheckIcon className='size-4 fill-white' />Lulus</button>
+                        <button className='font-semibold text-white btn btn-error btn-xs' onClick={() => handleVerification('not_passed', row.student_registration.id)}><XMarkIcon className='size-4 fill-white' />Tidak Lulus</button>
+                        <button className='font-semibold text-white btn btn-primary btn-xs' onClick={() => handleVerification('passed', row.student_registration.id)}><CheckIcon className='size-4 fill-white' />Lulus</button>
                     </div>
             ),
             sortable: true,
@@ -131,7 +129,7 @@ const AnnouncementStudent = () => {
         <AuthenticatedLayout>
             <Head title="Daftar Siswa" />
             <div className='w-full pb-2 mb-2 border-b-2'>
-                <span>Data Verifikasi</span>
+                <span>Data Pengumuman</span>
             </div>
             <div className='pb-3 my-3 border-b-2'>
                 <button className='h-10 font-bold text-white min-h-10 btn btn-primary' onClick={() => setIsOpenModal(true)}>Edit Keterangan Lulus</button>
@@ -153,7 +151,7 @@ const AnnouncementStudent = () => {
                     </label>
                 </div>
                 <select className="min-h-10 select select-bordered" defaultValue={year} onChange={handleFilterYear}>
-                    {yearsOptions().map((item, key) => (
+                    {yearsOptions(Number(ppdbSetting.registration_year)).map((item, key) => (
                         <option key={key} value={item}>Tahun {item}</option>
                     ))}
                 </select>

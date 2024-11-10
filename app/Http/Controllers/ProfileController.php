@@ -74,13 +74,18 @@ class ProfileController extends Controller
         $users = User::findOrFail((int)$userId);
         $currentPhoto = $users->photo;
 
-        if (!empty($currentPhoto)) {
-            unlink(public_path('uploads/') . $currentPhoto);
+        // Define the custom public path
+        $customPublicPath = base_path('../uploads');
+
+        // Delete the current file if it exists
+        $filePath = $customPublicPath . '/' . $currentPhoto;
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
 
         $fileName = $userId . time() . '.' . $request->file->extension();
         $users->photo = $fileName;
-        $request->file->move(public_path('uploads'), $fileName);
+        $request->file->move($customPublicPath, $fileName);
         $users->save();
         return redirect()->back()->with('success', 'Photo profile updated.');
     }

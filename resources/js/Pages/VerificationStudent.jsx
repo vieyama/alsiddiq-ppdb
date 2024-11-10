@@ -10,11 +10,13 @@ import ModalEditVerification from './Admin/ModalEditVerification';
 import { useReactToPrint } from 'react-to-print';
 import axios from 'axios';
 import { VerificationPrintAdminPrint } from './Student/Component/Print/VerificationPrintAdmin';
+import { yearsOptions } from '@/utils/yearOptions';
 
 const VerificationStudent = () => {
     const students = usePage().props.students;
     const queryString = window.location.search;
     const ppdbSetting = usePage().props.ppdbSetting;
+    const csrfToken = usePage().props.csrf_token;
     const urlParams = new URLSearchParams(queryString);
     const search = urlParams.get('search')
     const year = urlParams.get('year')
@@ -24,17 +26,6 @@ const VerificationStudent = () => {
 
     const [selectedRows, setSelectedRows] = useState(false);
     const [toggledClearRows, setToggleClearRows] = useState(false);
-
-    const yearsOptions = () => {
-        const currentYear = new Date().getFullYear();
-        const yearsList = [];
-
-        for (let i = 0; i <= 20; i++) {
-            yearsList.push(currentYear - i);
-        }
-
-        return yearsList;
-    }
 
     const handleChange = ({ selectedRows }) => {
         setSelectedRows(selectedRows);
@@ -54,7 +45,11 @@ const VerificationStudent = () => {
 
     const handleVerification = (status, id) => {
         const newStatus = status === 'verified' ? 'waiting-for-verification' : 'verified'
-        router.patch('/verification-student/update', { id, status: newStatus })
+        router.patch('/verification-student/update', { id, status: newStatus }, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        })
     }
 
     const batchVerification = (status) => {
@@ -62,7 +57,10 @@ const VerificationStudent = () => {
             onSuccess: () => {
                 setToggleClearRows(!toggledClearRows)
                 setSelectedRows([])
-            }
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
         })
     }
 
@@ -101,7 +99,7 @@ const VerificationStudent = () => {
             name: 'NIS',
             selector: row => row.nis,
             sortable: true,
-            width: '135px',
+            width: '130px',
         },
         {
             name: 'NISN',
@@ -113,13 +111,13 @@ const VerificationStudent = () => {
             name: 'NIK',
             selector: row => row.nik,
             sortable: true,
-            width: '135px',
+            width: '150px',
         },
         {
             name: 'Nama Lengkap',
             selector: row => row.fullname,
             sortable: true,
-            width: '165px',
+            width: '200px',
         },
         {
             name: 'Status Verifikasi',
@@ -168,7 +166,7 @@ const VerificationStudent = () => {
                     </label>
                 </div>
                 <select className="min-h-10 select select-bordered" defaultValue={year} onChange={handleFilterYear}>
-                    {yearsOptions().map((item, key) => (
+                    {yearsOptions(Number(ppdbSetting.registration_year)).map((item, key) => (
                         <option key={key} value={item}>Tahun {item}</option>
                     ))}
                 </select>

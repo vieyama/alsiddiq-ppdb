@@ -3,9 +3,10 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 
 export default function ForgotPassword({ status }) {
+    const csrfToken = usePage().props.csrf_token;
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     });
@@ -13,7 +14,11 @@ export default function ForgotPassword({ status }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('password.email'));
+        post(route('password.email'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
     };
 
     return (

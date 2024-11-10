@@ -15,6 +15,7 @@ import { DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 import TextInput from '@/Components/TextInput';
 import { useMemo, useState } from 'react';
+import { yearsOptions } from '@/utils/yearOptions';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -114,17 +115,6 @@ export default function Statistic() {
         },
     };
 
-    const yearsOptions = () => {
-        const currentYear = new Date().getFullYear();
-        const yearsList = [];
-
-        for (let i = 0; i <= 20; i++) {
-            yearsList.push(currentYear - i);
-        }
-
-        return yearsList;
-    }
-
     const handleFilterYear = (event) => {
         const url = new URL(window.location.href);
         url.searchParams.append('year', event.target.value);
@@ -156,7 +146,7 @@ export default function Statistic() {
 
             <div className='flex justify-end w-full mb-4'>
                 <select className="min-h-10 select select-bordered" defaultValue={year} onChange={handleFilterYear}>
-                    {yearsOptions().map((item, key) => (
+                    {yearsOptions(Number(ppdbSetting.registration_year)).map((item, key) => (
                         <option key={key} value={item}>Tahun {item}</option>
                     ))}
                 </select>

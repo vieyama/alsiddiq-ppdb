@@ -4,10 +4,11 @@ import { KeyIcon, UsersIcon } from '@heroicons/react/24/solid'
 import { useTranslation } from 'react-i18next';
 import Modal from '@/Components/Modal';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import Checkbox from '@/Components/Checkbox';
 
 const LoginModal = ({ isOpen, onClose }) => {
+    const csrfToken = usePage().props.csrf_token;
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -17,7 +18,12 @@ const LoginModal = ({ isOpen, onClose }) => {
 
     const onSubmit = (values) => {
         values.preventDefault();
-        post("login", data);
+        post(route('login'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            onFinish: () => reset('password', 'password_confirmation'),
+        });
     }
 
     return (

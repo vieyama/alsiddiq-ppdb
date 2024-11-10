@@ -77,9 +77,9 @@ export default function Dashboard() {
             </div>
 
             <div className='hidden'>
+                <ProofofPassedPrint ref={passedRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
                 <ProofofRegistrationPrint ref={contentRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
                 <ProofofVerificationPrint ref={registrationRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
-                <ProofofPassedPrint ref={passedRef} student={student} parents={parents} school={school} studentRegistration={studentRegistration} ppdbSetting={ppdbSetting} />
             </div>
         </AuthenticatedLayout>
     );

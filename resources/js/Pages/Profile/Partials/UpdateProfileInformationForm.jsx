@@ -11,6 +11,7 @@ export default function UpdateProfileInformation({
     className = '',
 }) {
     const user = usePage().props.auth.user;
+    const csrfToken = usePage().props.csrf_token;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -21,7 +22,11 @@ export default function UpdateProfileInformation({
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route('profile.update'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        });
     };
 
     return (

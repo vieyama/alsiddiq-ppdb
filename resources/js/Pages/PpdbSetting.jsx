@@ -14,7 +14,7 @@ import { useState } from 'react';
 
 const PpdbSetting = () => {
     const [isOpenModal, setIsOpenModal] = useState(false)
-
+    const csrfToken = usePage().props.csrf_token;
     const ppdbSetting = usePage().props.ppdbSetting
     const { data, setData, patch, errors, processing, recentlySuccessful, setError } =
         useForm({
@@ -25,7 +25,11 @@ const PpdbSetting = () => {
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route('ppdb-setting-update', { id: ppdbSetting?.id }));
+        patch(route('ppdb-setting-update', { id: ppdbSetting?.id }), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
     };
 
     const switchRegistrationStatus = () => {
@@ -33,6 +37,9 @@ const PpdbSetting = () => {
             status: ppdbSetting?.status === 'active' ? 'close' : 'active',
             ...(ppdbSetting?.status === 'close' && { registration_year: Number(ppdbSetting?.registration_year) + 1 })
         }, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
             onError: err => {
                 setError(err);
             },

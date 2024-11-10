@@ -5,6 +5,7 @@ import React from 'react'
 const UpdatePhotoModal = ({ isOpen, onClose }) => {
     const user = usePage().props.auth.user;
     const user_id = user.id;
+    const csrfToken = usePage().props.csrf_token;
 
     const { setData, errors, post } = useForm({
         file: null,
@@ -17,7 +18,10 @@ const UpdatePhotoModal = ({ isOpen, onClose }) => {
             onSuccess: () => {
                 setData("file", null)
                 onClose()
-            }
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
         });
     }
 

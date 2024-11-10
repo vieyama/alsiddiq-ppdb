@@ -25,7 +25,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $year = date('Y');
+        $ppdbSetting = PpdbSetting::find(1);
+        $year = $ppdbSetting->registration_year === (date('Y') + 1) ? $ppdbSetting->registration_year : (date('Y') + 1);
         $totalUserThisYear = DB::table('student_registrations')->where('registration_year', $year)->count();
         $totalUserThisYearPassed = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'passed')->count();
 
@@ -61,8 +62,6 @@ class AdminController extends Controller
             }
         }
 
-        $ppdbSetting = PpdbSetting::find(1);
-
         return Inertia::render('Dashboard', [
             'totalUserThisYear' => $totalUserThisYear,
             'totalUserThisYearPassed' => $totalUserThisYearPassed,
@@ -72,7 +71,8 @@ class AdminController extends Controller
     }
     public function statistic(Request $request)
     {
-        $year = $request->query('year') ?? date('Y');
+        $ppdbSetting = PpdbSetting::find(1);
+        $year = $request->query('year') ?? ($ppdbSetting->registration_year >= (date('Y') + 1) ? $ppdbSetting->registration_year : (date('Y') + 1));
         $totalUserPerYear = DB::table('student_registrations')->where('registration_year', $year)->count();
         $totalUserPerYearPassed = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'passed')->count();
         $totalUserPerYearVerified = DB::table('student_registrations')->where('registration_year', $year)->where('status', 'verified')->count();
@@ -178,8 +178,10 @@ class AdminController extends Controller
 
     public function announcementStudent(Request $request)
     {
+        $ppdbSetting = PpdbSetting::find(1);
         $search = $request->query('search');
-        $year = $request->query('year') ?? date('Y');
+        $year = $request->query('year') ?? ($ppdbSetting->registration_year >= (date('Y') + 1) ? $ppdbSetting->registration_year : (date('Y') + 1));
+
         $students = Student::whereHas('student_registration', function ($query) use ($year) {
             $query->whereIn('status', ['verified', 'passed', 'not_passed'])->where('registration_year', $year);
         })
@@ -190,7 +192,7 @@ class AdminController extends Controller
                     ->orWhere('nik', 'like', '%' . $search . '%')
                     ->orWhereHas('student_registration', function ($query) use ($search) {
                         $query->where('register_number', 'like', '%' . $search . '%')
-                            ->whereIn('status', ['verified', 'waiting-for-verification']);
+                            ->whereIn('status', ['verified', 'passed', 'not_passed']);
                     });
             })
             ->with('student_registration')->orderBy('created_at', 'desc')
@@ -266,7 +268,8 @@ class AdminController extends Controller
     public function verificationStudent(Request $request)
     {
         $search = $request->query('search');
-        $year = $request->query('year') ?? date('Y');
+        $ppdbSetting = PpdbSetting::find(1);
+        $year = $request->query('year') ?? ($ppdbSetting->registration_year >= (date('Y') + 1) ? $ppdbSetting->registration_year : (date('Y') + 1));
         $students = Student::whereHas('student_registration', function ($query) use ($year) {
             $query->whereIn('status', ['verified', 'waiting-for-verification'])->where('registration_year', $year);
         })
@@ -300,7 +303,7 @@ class AdminController extends Controller
 
     public function updateVerification(Request $request): RedirectResponse
     {
-        $studentRegistration = StudentRegistration::find((int)$request->id);
+        $studentRegistration = StudentRegistration::find($request->id);
         $studentRegistration->status = $request->status;
         $studentRegistration->save();
 
@@ -345,13 +348,19 @@ class AdminController extends Controller
         $ppdbSetting = PpdbSetting::find(1);
         $currentPhoto = $ppdbSetting->signature;
 
-        if (!empty($currentPhoto)) {
-            unlink(public_path('uploads/') . $currentPhoto);
+        // Define the custom public path
+        $customPublicPath = base_path('../uploads');
+
+        // Delete the current file if it exists
+        $filePath = $customPublicPath . '/' . $currentPhoto;
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
 
         $fileName = $ppdbSetting->chairman . time() . '.' . $request->file->extension();
         $ppdbSetting->signature = $fileName;
-        $request->file->move(public_path('uploads'), $fileName);
+
+        $request->file->move($customPublicPath, $fileName);
         $ppdbSetting->save();
         return redirect()->back()->with('success', 'Signature updated.');
     }

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { router } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import TextInput from '@/Components/TextInput';
 import Label from '../Label';
 
 const Second = ({ handleNext, parentData }) => {
+    const csrfToken = usePage().props.csrf_token;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const step = urlParams.get('step') ?? 1
@@ -24,7 +25,11 @@ const Second = ({ handleNext, parentData }) => {
     const onSubmit = data => handleNext({ parentData: data });
 
     const handleBack = () => {
-        router.get(`/ppdb/register?step=${Number(step) - 1}`)
+        router.get(`/ppdb/register?step=${Number(step) - 1}`, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        })
 
     }
 

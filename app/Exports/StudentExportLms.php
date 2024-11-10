@@ -155,7 +155,7 @@ class StudentExportLms implements FromCollection, WithHeadings, WithMapping
             $guardian->income ?? '',
             '',
             $guardian->phone ?? '',
-            $student->student_registration->registration_year,
+            $student->student_registration->registration_year ?? '',
             'Baru',
             'Aktif',
             '',

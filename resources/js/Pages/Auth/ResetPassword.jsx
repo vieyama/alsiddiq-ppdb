@@ -3,10 +3,11 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import Head from '@/Components/Head';
 
 export default function ResetPassword({ token, email }) {
+    const csrfToken = usePage().props.csrf_token;
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
         email: email,
@@ -18,6 +19,9 @@ export default function ResetPassword({ token, email }) {
         e.preventDefault();
 
         post(route('password.store'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };

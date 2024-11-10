@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PpdbSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
@@ -26,7 +27,10 @@ class PpdbController extends Controller
 
     public function register()
     {
-        return Inertia::render('PPDB/Register');
+        $ppdbSetting = PpdbSetting::findOrFail(1);
+        return Inertia::render('PPDB/Register', [
+            'ppdbSetting' => $ppdbSetting
+        ]);
     }
 
     public static function generateRegistrationNumber(): string
@@ -50,9 +54,13 @@ class PpdbController extends Controller
     {
         $nis = $request->studentData['nis'];
         $registrationNumber = self::generateRegistrationNumber($nis);
+        $ppdbSetting = PpdbSetting::findOrFail(1);
 
         try {
             DB::beginTransaction();
+
+            $lastAnouncemenetNumberInYear = StudentRegistration::where('registration_year', $ppdbSetting->registration_year)->orderBy('announcement_number', 'desc')
+                ->first();
 
             $user = User::create([
                 'name' => $request->studentData['fullName'],
@@ -85,7 +93,8 @@ class PpdbController extends Controller
                 'register_number' => $registrationNumber,
                 'student_id' => $student->id,
                 'status' => 'waiting-for-verification',
-                'registration_year' => date("Y")
+                'announcement_number' => is_null($lastAnouncemenetNumberInYear) ? 1 : $lastAnouncemenetNumberInYear->announcement_number + 1,
+                'registration_year' => $ppdbSetting->registration_year
             ]);
 
             // Father Data
@@ -122,7 +131,7 @@ class PpdbController extends Controller
                     'phone' => $request->parentData['guardian']['phone'],
                 ]);
             }
-            if(!empty($request->previousSchoolData['schoolNpsn'])){
+            if (!empty($request->previousSchoolData['schoolNpsn'])) {
                 StudentPrevSchool::create([
                     'exam_model' => $request->previousSchoolData['examModel'] ?? '',
                     'school_adress' => $request->previousSchoolData['schoolAdress'] ?? '',
@@ -141,6 +150,7 @@ class PpdbController extends Controller
 
             return redirect(route('dashboard-student', absolute: false));
         } catch (Exception $e) {
+            dd($e);
             // Rollback transaction for other exceptions
             DB::rollBack();
             return redirect(route('ppdb', absolute: false))->withErrors(['error' => 'Something went wrong!']);

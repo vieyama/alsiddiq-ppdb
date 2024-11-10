@@ -1,15 +1,20 @@
 import PrimaryButton from '@/Components/PrimaryButton';
 import GuestLayout from '@/Layouts/GuestLayout';
-import {  Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import Head from '@/Components/Head';
 
 export default function VerifyEmail({ status }) {
     const { post, processing } = useForm({});
+    const csrfToken = usePage().props.csrf_token;
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('verification.send'));
+        post(route('verification.send'), {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+        });
     };
 
     return (
@@ -35,14 +40,14 @@ export default function VerifyEmail({ status }) {
                     <PrimaryButton disabled={processing}>
                         Resend Verification Email
                     </PrimaryButton>
-
                     <Link
+                        className="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         href={route('logout')}
                         method="post"
                         as="button"
-                        className="text-sm text-gray-600 underline rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        headers={{ 'X-CSRF-TOKEN': csrfToken }}
                     >
-                        Log Out
+                        Logout
                     </Link>
                 </div>
             </form>

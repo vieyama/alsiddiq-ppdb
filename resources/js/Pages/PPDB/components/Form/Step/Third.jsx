@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { router } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import TextInput from '@/Components/TextInput';
 import Label from '../Label';
+import { yearsOptions } from '@/utils/yearOptions';
 
 const Third = ({ handleNext, previousSchoolData }) => {
+    const ppdbSetting = usePage().props.ppdbSetting;
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const step = urlParams.get('step') ?? 1
@@ -25,19 +27,6 @@ const Third = ({ handleNext, previousSchoolData }) => {
 
     const handleBack = () => {
         router.get(`/ppdb/register?step=${Number(step) - 1}`)
-
-    }
-
-    const yearsOptions = () => {
-        const currentYear = new Date().getFullYear();
-        const nextYear = currentYear + 1;
-        const yearsList = [];
-
-        for (let i = 0; i <= 10; i++) {
-            yearsList.push(nextYear - i);
-        }
-
-        return yearsList;
     }
 
     return (
@@ -106,7 +95,7 @@ const Third = ({ handleNext, previousSchoolData }) => {
                     </div>
                     <select className="select select-bordered" defaultValue="" {...register('yearOfGraduation', { required: false })}>
                         <option value="" disabled>{t('form.selectItem', { item: t('form.yearOfGraduation') })}</option>
-                        {yearsOptions().map((item, key) => (
+                        {yearsOptions(Number(ppdbSetting.registration_year)).map((item, key) => (
                             <option key={key} value={item}>{item}</option>
                         ))}
                     </select>

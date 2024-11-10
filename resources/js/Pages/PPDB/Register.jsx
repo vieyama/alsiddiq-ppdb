@@ -18,11 +18,11 @@ const registerDataAtom = atomWithStorage('registerData', {
 
 const Register = () => {
     const queryString = window.location.search;
+    const csrfToken = usePage().props.csrf_token;
     const urlParams = new URLSearchParams(queryString);
     const { t } = useTranslation();
     const [values, setValues] = useAtom(registerDataAtom)
     const step = urlParams.get('step') ?? '1'
-    const csrfToken = usePage().props.csrf_token;
 
     const handleNext = (data) => {
         setValues({ ...values, ...data });
